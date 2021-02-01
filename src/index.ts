@@ -1,13 +1,17 @@
-import express from 'express'
+import express from 'express';
+import { auth } from 'auth';
 
 const port = 5000;
 
 const app = express();
 
+app.use(auth);
+
 app.get('/', (req, res) => {
-    res.send('Successful PassrAPI!')
+	console.log('GET /');
+	res.send('Successful PassrAPI!');
 });
 
 app.listen(port, () => {
-    console.log('Running Passr API.');
+	console.log('Running Passr API.');
 });
