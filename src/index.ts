@@ -5,11 +5,15 @@ import userRouter from './routers/user';
 import courseRouter from './routers/course';
 import cItemRouter from './routers/courseItem';
 import semesterRouter from './routers/semester';
+import { auth } from 'auth';
 
 const port = 5000;
 const app = express();
 
+app.use(auth);
+
 app.get('/', (req, res) => {
+	console.log('GET /');
 	res.send('Successful PassrAPI!');
 });
 
