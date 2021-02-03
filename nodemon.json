@@ -1,0 +1,14 @@
+{
+	"restartable": "rs",
+	"watch": ["src/"],
+	"execMap": {
+		"ts": "node -r ts-node/register"
+	},
+	"env": {
+		"NODE_ENV": "development"
+	},
+	"events": {
+		"restart": "echo 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+	},
+	"ext": "js,json,ts"
+}

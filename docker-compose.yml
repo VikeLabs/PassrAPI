@@ -1,0 +1,11 @@
+services:
+    api:
+        build: .
+        image: passrapi:dev-latest
+        ports:
+            - '5000:5000'
+        volumes:
+            - apilog:/api/logs
+
+volumes:
+    apilog:
