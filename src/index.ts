@@ -18,6 +18,10 @@ app.use('/semester', semesterRouter);
 app.use('/coure', courseRouter);
 app.use('/courseItem', cItemRouter);
 
-app.listen(port, () => {
-	console.log('Running Passr API.');
-});
+(async () => {
+    await initDb();
+
+    app.listen(port, () => {
+        console.log('Running Passr API.');
+    });
+})();

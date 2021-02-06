@@ -4,6 +4,7 @@ import { courseItemSchema } from './courseItem'
 
 export const courseSchema = new dynamoose.Schema({
     "id": String,
+    "name": String,
     "courseItems": [courseItemSchema],
 }, {
     "timestamps": true
