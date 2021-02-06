@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
 	res.send('Successful PassrAPI!');
 });
 
-app.listen(port, () => {
-	console.log('Running Passr API.');
-});
+(async () => {
+    await initDb();
+
+    app.listen(port, () => {
+        console.log('Running Passr API.');
+    });
+})();
