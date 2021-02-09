@@ -1,11 +1,26 @@
 services:
-    api:
-        build: .
-        image: passrapi:dev-latest
+    dynamodb-local:
+        command: '-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data'
+        image: 'amazon/dynamodb-local:latest'
+        container_name: dynamodb-local
         ports:
-            - '5000:5000'
+            - '8000:8000'
         volumes:
-            - apilog:/api/logs
+            - './docker/dynamodb:/home/dynamodblocal/data'
+        working_dir: /home/dynamodblocal
+    # api:
+    #     build: .
+    #     image: passrapi:dev-latest
+    #     ports:
+    #         - '5000:5000'
+    #     environment:
+    #         AWS_ACCESS_KEY_ID: 'TEST'
+    #         AWS_SECRET_ACCESS_KEY: 'FAKE'
+    #         AWS_REGION: 'us-west-2'
+    #     volumes:
+    #         - apilog:/api/logs
+    #     depends_on:
+    #         - dynamodb-local
 
 volumes:
     apilog:
