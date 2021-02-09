@@ -2,6 +2,7 @@ import * as dynamoose from 'dynamoose'
 import CourseItem from './models/courseItem'
 import Course from './models/course'
 import Semester from './models/semester'
+import User from './models/user'
 
 const assignment1 = new CourseItem({
     "id": "zxcvbn",
@@ -27,13 +28,21 @@ const fall2020 = new Semester({
     "updatedAt": null
 })
 
+const user1 = new User({
+    id: "isaiahdoyle@uvic.ca",
+    courseItems: [assignment1],
+    courses: [math101],
+    semesters: [fall2020],
+})
+
 const initDb = async () => {
     try {
 
         console.log('before document.save')
         await assignment1.save()
-        // await math101.save()
+        await math101.save()
         await fall2020.save()
+        await user1.save()
         console.log('after document.save')
 
         console.log("initDb running!")
