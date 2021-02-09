@@ -19,6 +19,8 @@ app.use('/coure', courseRouter);
 app.use('/courseItem', cItemRouter);
 
 (async () => {
+    console.log('before init');
+    dynamoose.aws.ddb.local();
     await initDb();
 
     app.listen(port, () => {
