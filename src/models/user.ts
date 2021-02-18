@@ -6,13 +6,13 @@ import { SemesterInterface, semesterSchema } from './semester';
 
 export const userSchema = new dynamoose.Schema(
     {
-    id: String,
-    courseItems: [courseItemSchema],
-    courses: [courseSchema],
-    semesters: [semesterSchema],
+        id: String,
+        courseItems: [courseItemSchema],
+        courses: [courseSchema],
+        semesters: semesterSchema,
     },
     {
-    timestamps: true,
+        timestamps: true,
     }
 );
 

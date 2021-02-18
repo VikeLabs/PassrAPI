@@ -8,6 +8,7 @@ export const courseItemSchema = new dynamoose.Schema({
     weight: Number,
     grade: [Number, fraction],
     dueDate: Date,
+    owner: String,
 });
 
 export interface CourseItemInterface extends Document {
@@ -16,6 +17,7 @@ export interface CourseItemInterface extends Document {
     weight: number;
     grade: number | Fraction;
     dueDate: Date;
+    owner: string;
 }
 
 const CourseItem = dynamoose.model<CourseItemInterface>('CourseItem', courseItemSchema);
