@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import * as dynamoose from 'dynamoose';
 import express from 'express';
+import initDb from './initDB';
 
 const port = 5000;
 
@@ -20,6 +22,8 @@ app.get('/', (req, res) => {
         console.log('Running Passr API.');
     });
 })();
+
+// import Cat from './initDB';
 
 // (async () => {
 //     try {

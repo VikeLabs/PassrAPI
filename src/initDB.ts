@@ -14,9 +14,9 @@ const assignment1 = new CourseItem({
 });
 
 const math101 = new Course({
-    id: 1,
+    id: '1',
     name: 'Math 101',
-    courseItems: assignment1,
+    courseItems: [assignment1],
     createdAt: null,
     updatedAt: null,
     onwer: 'isaiahdoyle@uvic.ca',
@@ -47,15 +47,15 @@ const initDb = async () => {
 
         console.log('before document.save');
         await assignment1.save();
+        console.log(assignment1);
         await math101.save();
-        await fall2020.save();
-        await user1.save();
+        console.log(math101);
+        // await fall2020.save();
+        // await user1.save();
         console.log('after document.save');
-
-        console.log('initDb running!');
-        console.log('semester: ' + fall2020.name);
-        console.log('courses in fall2020: ' + fall2020.courses[0].name);
-        console.log('assignment in math101: ' + assignment1.name);
+        // console.log('semester: ' + fall2020.name);
+        // console.log('courses in fall2020: ' + fall2020.courses[0].name);
+        // console.log('assignment in math101: ' + assignment1.name);
         console.log('assignment 1 due date: ' + assignment1.dueDate);
 
     } catch (err) {

@@ -1,10 +1,11 @@
 import * as dynamoose from 'dynamoose';
 import { Document } from 'dynamoose/dist/Document';
-import { courseItemSchema, CourseItemInterface } from './courseItem';
+import CourseItem, { courseItemSchema, CourseItemInterface } from './courseItem';
 
 export const courseSchema = new dynamoose.Schema({
         id: String,
         name: String,
+        // courseItems: CourseItem, // model types not working???
         courseItems: [courseItemSchema],
         owner: String,
 });
