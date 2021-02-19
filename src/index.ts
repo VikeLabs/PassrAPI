@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import * as dynamoose from 'dynamoose';
 import express from 'express';
 import userRouter from './routers/user';
 import courseRouter from './routers/course';
 import cItemRouter from './routers/courseItem';
 import semesterRouter from './routers/semester';
+import initDb from './initDB';
 
 const port = 5000;
 const app = express();
@@ -28,6 +30,8 @@ app.use('/courseItem', cItemRouter);
         console.log('Running Passr API.');
     });
 })();
+
+// import Cat from './initDB';
 
 // (async () => {
 //     try {

@@ -1,6 +1,6 @@
 import * as dynamoose from 'dynamoose';
 import { Document } from 'dynamoose/dist/Document';
-import Fraction, { fraction } from './fraction';
+import FractionInterface, { fraction } from './fraction';
 
 export const courseItemSchema = new dynamoose.Schema({
     id: String,
@@ -15,7 +15,7 @@ export interface CourseItemInterface extends Document {
     id: string;
     name: string;
     weight: number;
-    grade: number | Fraction;
+    grade: number | FractionInterface;
     dueDate: Date;
     owner: string;
 }
