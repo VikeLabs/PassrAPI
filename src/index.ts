@@ -9,11 +9,6 @@ import semesterRouter from './routers/semester';
 const port = 5000;
 const app = express();
 
-app.use('/', (req, res, next) => {
-	console.log('Successful PassrAPI!');
-	next();
-});
-
 app.get('/', (req, res) => {
 	res.send('Successful PassrAPI!');
 });
