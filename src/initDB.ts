@@ -1,8 +1,10 @@
 import * as dynamoose from 'dynamoose';
-import CourseItem from './models/courseItem';
+import AWS from 'aws-sdk';
 import Course from './models/course';
 import Semester from './models/semester';
+import CourseItem from './models/courseItem';
 import User from './models/user';
+import { updateLanguageServiceSourceFile } from 'typescript';
 
 const assignment1 = new CourseItem({
     id: 'zxcvbn',
@@ -13,10 +15,18 @@ const assignment1 = new CourseItem({
     owner: 'isaiahdoyle@uvic.ca',
 });
 
+const assignment2 = new CourseItem({
+    id: 'zxcvbnm',
+    name: 'assignment 2',
+    weight: 8.5,
+    grade: 83,
+    owner: 'isaiahdoyle@uvic.ca',
+})
+
 const math101 = new Course({
     id: 1,
     name: 'Math 101',
-    courseItems: assignment1,
+    courseItems: [assignment1, assignment2],
     createdAt: null,
     updatedAt: null,
     onwer: 'isaiahdoyle@uvic.ca',
@@ -65,51 +75,3 @@ const initDb = async () => {
 
 export default initDb;
 
-
-
-
-
-// import * as dynamoose from 'dynamoose';
-// import { Document } from 'dynamoose/dist/Document';
-
-// const CatSchema = new dynamoose.Schema(
-//     {
-//         id: String,
-//         age: Number,
-//     },
-//     {
-//         timestamps: true,
-//     }
-// );
-
-// interface ICat extends Document {
-//     id: string;
-//     age: number;
-// }
-
-// export const Cat = dynamoose.model<ICat>('Cat', CatSchema);
-
-// async function init() {
-//     try {
-//         dynamoose.aws.ddb.local();
-//         dynamoose.model.defaults.set({
-//             prefix: 'Passr_',
-//         });
-//         const testCat = await Cat.create({
-//             id: Math.random().toString(),
-//             age: 3,
-//         });
-
-//         const testCat2 = await Cat.create({
-//             id: 'testKitty2',
-//             age: 5,
-//         });
-//         console.log(testCat2);
-//         await testCat2.save();
-//         await testCat.save({ overwrite: true, return: 'document' });
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
-
-// export default init;
