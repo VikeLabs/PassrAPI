@@ -1,8 +1,10 @@
 import * as dynamoose from 'dynamoose';
-import CourseItem from './models/courseItem';
+import AWS from 'aws-sdk';
 import Course from './models/course';
 import Semester from './models/semester';
+import CourseItem from './models/courseItem';
 import User from './models/user';
+import { updateLanguageServiceSourceFile } from 'typescript';
 
 const assignment1 = new CourseItem({
     id: 'zxcvbn',
@@ -13,10 +15,18 @@ const assignment1 = new CourseItem({
     owner: 'isaiahdoyle@uvic.ca',
 });
 
+const assignment2 = new CourseItem({
+    id: 'zxcvbnm',
+    name: 'assignment 2',
+    weight: 8.5,
+    grade: 83,
+    owner: 'isaiahdoyle@uvic.ca',
+})
+
 const math101 = new Course({
     id: '1',
     name: 'Math 101',
-    courseItems: [assignment1],
+    courseItems: [assignment1, assignment2],
     createdAt: null,
     updatedAt: null,
     onwer: 'isaiahdoyle@uvic.ca',
@@ -45,18 +55,40 @@ const initDb = async () => {
             prefix: 'Passr_',
         });
 
-        console.log('before document.save');
-        await assignment1.save();
-        console.log(assignment1);
-        await math101.save();
-        console.log(math101);
+        // console.log('before document.save');
+        // await assignment1.save();
+        // await assignment2.save();
+        // // console.log(assignment1);
+
+        // await math101.save();
+        // await Course.update({ id: '1' }, {$ADD: { courseItems: [assignment2] }});
+
+        // console.log(math101);
         // await fall2020.save();
         // await user1.save();
-        console.log('after document.save');
-        // console.log('semester: ' + fall2020.name);
+        // console.log('after document.save');
+
+        // const getFall2020 = await Semester.get('qwerty');
+        // console.log(getFall2020);
+
+        const getAssignment1 = await CourseItem.get('zxcvbn');
+        console.log(getAssignment1);
+
+        const getMath101 = await Course.get('1');
+        console.log(getMath101.name);
+        // console.log('math 101 course item 1: ' + getMath101.courseItems[0]);
+        // console.log('math 101 course item 2: ' + getMath101.courseItems);
+
+        console.log("\ntest courseItem array:");
+
+        for (const element of getMath101.courseItems) {
+            console.log(element);
+          }
+
+        console.log('semester: ' + fall2020.name);
         // console.log('courses in fall2020: ' + fall2020.courses[0].name);
         // console.log('assignment in math101: ' + assignment1.name);
-        console.log('assignment 1 due date: ' + assignment1.dueDate);
+        // console.log('assignment 1 due date: ' + assignment1.dueDate);
 
     } catch (err) {
         console.error(err);
@@ -65,51 +97,3 @@ const initDb = async () => {
 
 export default initDb;
 
-
-
-
-
-// import * as dynamoose from 'dynamoose';
-// import { Document } from 'dynamoose/dist/Document';
-
-// const CatSchema = new dynamoose.Schema(
-//     {
-//         id: String,
-//         age: Number,
-//     },
-//     {
-//         timestamps: true,
-//     }
-// );
-
-// interface ICat extends Document {
-//     id: string;
-//     age: number;
-// }
-
-// export const Cat = dynamoose.model<ICat>('Cat', CatSchema);
-
-// async function init() {
-//     try {
-//         dynamoose.aws.ddb.local();
-//         dynamoose.model.defaults.set({
-//             prefix: 'Passr_',
-//         });
-//         const testCat = await Cat.create({
-//             id: Math.random().toString(),
-//             age: 3,
-//         });
-
-//         const testCat2 = await Cat.create({
-//             id: 'testKitty2',
-//             age: 5,
-//         });
-//         console.log(testCat2);
-//         await testCat2.save();
-//         await testCat.save({ overwrite: true, return: 'document' });
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
-
-// export default init;
