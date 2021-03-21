@@ -24,6 +24,9 @@ export interface CourseInterface extends Document {
     owner: string;
 }
 
-const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
+const Course = dynamoose.model<CourseInterface>('Course', courseSchema, {
+    create: false,
+    waitForActive: { enabled: false },
+});
 
 export default Course;

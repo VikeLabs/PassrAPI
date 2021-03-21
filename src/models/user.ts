@@ -7,7 +7,7 @@ export const userSchema = new dynamoose.Schema(
         id: String,
         semesters: {
             type: Array,
-            schema: Semester
+            schema: Semester,
         },
     },
     {
@@ -20,6 +20,9 @@ export interface UserInterface extends Document {
     semesters: SemesterInterface[];
 }
 
-const User = dynamoose.model<UserInterface>('User', userSchema);
+const User = dynamoose.model<UserInterface>('User', userSchema, {
+    create: false,
+    waitForActive: { enabled: false },
+});
 
 export default User;
