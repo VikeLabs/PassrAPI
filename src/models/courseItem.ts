@@ -20,6 +20,10 @@ export interface CourseItemInterface extends Document {
     owner: string;
 }
 
-const CourseItem = dynamoose.model<CourseItemInterface>('CourseItem', courseItemSchema);
+const CourseItem = dynamoose.model<CourseItemInterface>(
+    'CourseItem',
+    courseItemSchema,
+    { create: false, waitForActive: { enabled: false } }
+);
 
 export default CourseItem;
