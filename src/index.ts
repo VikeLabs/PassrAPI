@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import * as dynamoose from 'dynamoose';
 import express from 'express';
-import initDb from './initDB';
+import initDB from './initDB';
 
 const port = 5000;
 
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 (async () => {
     console.log('before init');
     dynamoose.aws.ddb.local();
-    await initDb();
+    await initDB();
 
     app.listen(port, () => {
         console.log('Running Passr API.');
