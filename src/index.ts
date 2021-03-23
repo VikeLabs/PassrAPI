@@ -5,6 +5,7 @@ import userRouter from './routers/user';
 import courseRouter from './routers/course';
 import cItemRouter from './routers/courseItem';
 import semesterRouter from './routers/semester';
+import initDB from './initDB';
 
 const port = 5000;
 const app = express();
@@ -21,7 +22,7 @@ app.use('/courseItem', cItemRouter);
 (async () => {
     console.log('before init');
     dynamoose.aws.ddb.local();
-    await initDb();
+    await initDB();
 
     app.listen(port, () => {
         console.log('Running Passr API.');

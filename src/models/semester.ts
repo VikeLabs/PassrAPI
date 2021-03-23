@@ -22,7 +22,6 @@ export interface SemesterInterface extends Document {
 const Semester = dynamoose.model<SemesterInterface>(
     'Semester',
     semesterSchema,
-    { create: false, waitForActive: { enabled: false } }
 );
 
 export default Semester;
