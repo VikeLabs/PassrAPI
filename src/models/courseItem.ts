@@ -22,8 +22,7 @@ export interface CourseItemInterface extends Document {
 
 const CourseItem = dynamoose.model<CourseItemInterface>(
     'CourseItem',
-    courseItemSchema,
-    { create: false, waitForActive: { enabled: false } }
+    courseItemSchema
 );
 
 export default CourseItem;
