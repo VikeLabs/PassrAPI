@@ -9,7 +9,11 @@ export const courseItemSchema = new dynamoose.Schema({
     grade: [Number, fraction],
     dueDate: Date,
     owner: String,
-});
+    },
+    {
+        timestamps: true,
+    }
+);
 
 export interface CourseItemInterface extends Document {
     id: string;
