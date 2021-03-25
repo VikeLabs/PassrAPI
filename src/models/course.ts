@@ -1,12 +1,14 @@
 import * as dynamoose from 'dynamoose';
 import { Document } from 'dynamoose/dist/Document';
-import { courseItemSchema, CourseItemInterface } from './courseItem';
+import CourseItem, { courseItemSchema, CourseItemInterface } from './courseItem';
+import Fraction, { fraction } from './fraction';
 
 export const courseSchema = new dynamoose.Schema(
     {
         id: String,
         name: String,
         owner: String,
+        desiredGrade: fraction,
         courseItems: {
             type: Set,
             schema: [CourseItem],
@@ -20,6 +22,7 @@ export const courseSchema = new dynamoose.Schema(
 export interface CourseInterface extends Document {
     id: string;
     name: string;
+    desiredGrade: number | Fraction;
     courseItems: CourseItemInterface[];
     owner: string;
 }

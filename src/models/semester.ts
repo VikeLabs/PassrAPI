@@ -10,7 +10,11 @@ export const semesterSchema = new dynamoose.Schema({
         type: Set,
         schema: [Course],
     },
-});
+    },
+    {
+        timestamps: true,
+    }
+);
 
 export interface SemesterInterface extends Document {
     id: string;
