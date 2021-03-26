@@ -13,8 +13,6 @@ app.get('/', (req, res) => {
 });
 
 (async () => {
-    console.log('before init');
-    dynamoose.aws.ddb.local();
     await initDB();
 
     app.listen(port, () => {
