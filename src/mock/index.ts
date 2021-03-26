@@ -26,13 +26,14 @@ const math101 = new Course({
     courseItems: [assignment1, assignment2],
     createdAt: null,
     updatedAt: null,
-    onwer: 'testUser',
+    owner: 'testUser',
 });
 
 const fall2020 = new Semester({
     id: 'testSemester',
     name: 'Fall 2020',
     courses: [math101],
+    desiredGrade: 99.9,
     createdAt: null,
     updatedAt: null,
     owner: 'testUser',

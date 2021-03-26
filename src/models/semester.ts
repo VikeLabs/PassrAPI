@@ -1,6 +1,6 @@
 import * as dynamoose from 'dynamoose';
 import { Document } from 'dynamoose/dist/Document';
-import Course, { CourseInterface, courseSchema } from './course';
+import Course, { CourseInterface } from './course';
 
 export const semesterSchema = new dynamoose.Schema({
     id: String,
