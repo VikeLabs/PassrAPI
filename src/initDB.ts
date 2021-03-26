@@ -1,9 +1,4 @@
 import * as dynamoose from 'dynamoose';
-import AWS from 'aws-sdk';
-import Course from './models/course';
-import Semester from './models/semester';
-import CourseItem from './models/courseItem';
-import User from './models/user';
 
 const initDB = async () => {
     try {
@@ -23,6 +18,7 @@ const initDB = async () => {
         }
     } catch (err) {
         console.error(err);
+        process.exit(1);
     }
 };
 
