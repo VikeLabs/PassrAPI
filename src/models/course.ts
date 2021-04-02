@@ -7,11 +7,14 @@ export const courseSchema = new dynamoose.Schema(
     {
         id: String,
         name: String,
-        owner: String,
         desiredGrade: [Number, fraction],
         courseItems: {
             type: Set,
             schema: [CourseItem],
+        },
+        owner: {
+            type: String,
+            required: true,
         },
     },
     {
@@ -23,10 +26,9 @@ export interface CourseInterface extends Document {
     id: string;
     name: string;
     desiredGrade: number | FractionInterface;
-    courseItems: CourseItemInterface[];
+    courseItems?: CourseItemInterface[];
     owner: string;
 }
-
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
 
