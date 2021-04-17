@@ -6,7 +6,7 @@ const initDB = async () => {
             prefix: 'Passr_',
         });
 
-        if ( process.env.NODE_ENV == 'production') {
+        if ( process.env.NODE_ENV === 'production') {
             dynamoose.model.defaults.set({
                 create: false,
                 waitForActive: {

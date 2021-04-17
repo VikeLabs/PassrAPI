@@ -23,7 +23,7 @@ export const semesterSchema = new dynamoose.Schema(
 export interface SemesterInterface extends Document {
     id: string;
     name: string;
-    courses?: CourseInterface[];
+    courses: CourseInterface[];
     owner: string;
 }
 

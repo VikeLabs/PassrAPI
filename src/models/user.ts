@@ -16,7 +16,7 @@ export const userSchema = new dynamoose.Schema(
 );
 
 export interface UserInterface extends Document {
-    id: string;
+    owner: string;
     semesters: SemesterInterface[];
 }
 
