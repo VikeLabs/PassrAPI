@@ -26,7 +26,7 @@ export interface CourseInterface extends Document {
     id: string;
     name: string;
     desiredGrade: number | FractionInterface;
-    courseItems?: CourseItemInterface[];
+    courseItems: CourseItemInterface[];
     owner: string;
 }
 
