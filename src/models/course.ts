@@ -32,4 +32,20 @@ export interface CourseInterface extends Document {
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
 
+function CreateCourse({
+	id,
+	name,
+	desiredGrade,
+	courseItems,
+	owner,
+}: CourseInterface) {
+	Course.create({
+		id: id,
+		name: name,
+		desiredGrade: desiredGrade,
+		courseItems: courseItems,
+		owner: owner,
+	});
+}
+
 export default Course;
