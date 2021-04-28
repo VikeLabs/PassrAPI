@@ -1,21 +1,17 @@
 import express from 'express';
-import CourseItem, { CourseItemInterface } from '../models/courseItem';
-import dynamoose from 'dynamoose';
+import { create, read, update, del } from '../operators/courseItemOperations';
 
 const cItemRouter = express.Router();
+const app = express();
+
+app.use(express.json());
 
 cItemRouter.get('/', (req, res) => {
+	const courseItem = read(req.body.id);
 	console.log('Get Course Item');
+	console.log(courseItem);
 	res.send('Get cItemRouter');
 });
-
-const create = async (document: CourseItemInterface) => {
-	try {
-		CourseItem.create(document);
-	} catch (err) {
-		console.error(err);
-	}
-}
 
 cItemRouter.post('/', (req, res) => {
 	create(req.body);
@@ -24,11 +20,13 @@ cItemRouter.post('/', (req, res) => {
 });
 
 cItemRouter.put('/', (req, res) => {
+	update(req.body.id, req.body);
 	console.log('Put Course Item');
 	res.send('Put cItemRouter');
 });
 
 cItemRouter.delete('/', (req, res) => {
+	del(req.body.id);
 	console.log('Delete Course Item');
 	res.send('Delete cItemRouter');
 });
