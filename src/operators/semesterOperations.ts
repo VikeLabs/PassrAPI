@@ -29,7 +29,7 @@ export const update = async (key: string, data: Partial<SemesterInterface>) => {
 export const del = async (key: string) => {
     try {
         Semester.delete(key);
-        console.log('Deletion of document with id ' + key + ' successful.')
+        console.log('Deletion of document with id ' + key + ' successful.');
     } catch (err) {
         console.error(err);
     }
