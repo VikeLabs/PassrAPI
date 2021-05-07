@@ -29,7 +29,7 @@ export const update = async (key: string, data: Partial<CourseItemInterface>) =>
 export const del = async (key: string) => {
     try {
         CourseItem.delete(key);
-        console.log('Deletion of document with id ' + key + ' successful.')
+        console.log('Deletion of document with id ' + key + ' successful.');
     } catch (err) {
         console.error(err);
     }

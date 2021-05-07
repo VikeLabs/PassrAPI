@@ -2,9 +2,6 @@ import express from 'express';
 import { create, read, update, del } from '../operators/courseItemOperations';
 
 const cItemRouter = express.Router();
-const app = express();
-
-app.use(express.json());
 
 cItemRouter.get('/', (req, res) => {
 	const courseItem = read(req.body.id);
