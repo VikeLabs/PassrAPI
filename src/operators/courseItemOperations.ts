@@ -2,7 +2,7 @@ import CourseItem, { CourseItemInterface } from '../models/courseItem';
 
 export const create = async (courseItem: CourseItemInterface) => {
     try {
-        CourseItem.create(courseItem);
+        await CourseItem.create(courseItem);
 	} catch (err) {
         console.error(err);
 	}
@@ -20,7 +20,7 @@ export const read = async (key: string) => {
 
 export const update = async (key: string, data: Partial<CourseItemInterface>) => {
 	try {
-		CourseItem.update({ id: key }, data);
+		await CourseItem.update({ id: key }, data);
 	} catch (err) {
 		console.error(err);
 	}
@@ -28,7 +28,7 @@ export const update = async (key: string, data: Partial<CourseItemInterface>) =>
 
 export const del = async (key: string) => {
     try {
-        CourseItem.delete(key);
+        await CourseItem.delete(key);
         console.log('Deletion of document with id ' + key + ' successful.');
     } catch (err) {
         console.error(err);
