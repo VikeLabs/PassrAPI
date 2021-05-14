@@ -4,7 +4,10 @@ import Semester, { SemesterInterface } from './semester';
 
 export const userSchema = new dynamoose.Schema(
     {
-        id: String,
+        id: {
+            type: String,
+            hashKey: true,
+        },
         semesters: {
             type: Array,
             schema: Semester,

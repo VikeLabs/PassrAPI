@@ -18,9 +18,12 @@ export const read = async (key: string) => {
     }
 };
 
-export const update = async (key: string, data: Partial<CourseItemInterface>) => {
+export const update = async (data: Partial<CourseItemInterface>) => {
 	try {
-		await CourseItem.update({ id: key }, data);
+        // const id = data.id;
+        // delete data.id;
+		// await CourseItem.update({ id }, data);
+        await CourseItem.update(data);
 	} catch (err) {
 		console.error(err);
 	}

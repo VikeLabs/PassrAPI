@@ -4,7 +4,10 @@ import FractionInterface, { fraction } from './fraction';
 
 export const courseItemSchema = new dynamoose.Schema(
     {
-        id: String,
+        id: {
+            type: String,
+            hashKey: true,
+        },
         name: String,
         weight: Number,
         grade: [Number, fraction],
