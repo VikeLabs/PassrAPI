@@ -1,8 +1,10 @@
 import Semester, { SemesterInterface } from '../models/semester';
 
 export const create = async (semester: SemesterInterface) => {
-	if (!(await Semester.create(semester))) {
-		throw 'Semester Creation Error';
+	try {
+		await Semester.create(semester);
+	} catch (err) {
+		throw 'ERROR: semester not created';
 	}
 };
 
@@ -13,22 +15,34 @@ export const read = async (key: string) => {
 	if (semester) {
 		return semester;
 	} else {
-		throw 'Semester Read Error';
+		throw 'ERROR: could not read semester';
 	}
 };
 
 export const update = async (data: Partial<SemesterInterface>) => {
-	if (!(await Semester.update(data))) {
-		throw 'Semester Update Error';
+	let updated = false;
+	if (typeof data.id == 'string') {
+		const key: string = data.id;
+		const semester = await Semester.get(key);
+		if (semester && (await Semester.update(data))) {
+			updated = true;
+		}
+	}
+	if (!updated) {
+		throw 'ERROR: semester not updated';
 	}
 };
 
 export const del = async (key: string) => {
 	try {
-		Semester.delete(key);
-		console.log('Deletion of document with id ' + key + ' successful.');
+		const semester = await Semester.get(key);
+		if (semester) {
+			await Semester.delete(key);
+			console.log('Deletion of document with id ' + key + ' successful.');
+		} else {
+			throw 'ERROR';
+		}
 	} catch (err) {
-		console.log(err);
-		throw 'Semester Delete Error';
+		throw 'ERROR: semester not deleted';
 	}
 };
