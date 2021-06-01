@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"build:docker": "docker build . -t passrapi",
+		"build:app": "rollup -c rollup.config.js",
 		"build": "npm run build:docker",
 		"start:docker": "docker-compose up --build",
 		"start:dev": "nodemon --config nodemon.json src/index.ts",
@@ -22,6 +23,11 @@
 	},
 	"homepage": "https://github.com/Vikelabs/PassrAPI#readme",
 	"dependencies": {
+		"@aws-cdk/aws-apigateway": "^1.96.0",
+		"@aws-cdk/aws-apigatewayv2": "^1.96.0",
+		"@aws-cdk/aws-apigatewayv2-integrations": "^1.96.0",
+		"@aws-cdk/aws-lambda": "^1.96.0",
+		"@aws-cdk/aws-s3": "^1.96.0",
 		"@rollup/plugin-commonjs": "^17.1.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.1.1",
@@ -38,6 +44,7 @@
 		"nodemon": "^2.0.7",
 		"prettier": "^2.2.1",
 		"rollup": "^2.38.2",
+		"serverless-http": "^2.7.0",
 		"ts-node": "^9.1.1",
 		"uuid": "^8.3.2"
 	},
