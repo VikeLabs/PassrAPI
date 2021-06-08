@@ -3,10 +3,11 @@ import { create, read, update, del } from '../operators/courseItemOperations';
 
 const cItemRouter = express.Router();
 
-cItemRouter.get('/', async (req, res) => {
+cItemRouter.get('/:id', async (req, res) => {
 	try {
-		console.log('Get Course Item');
-		const courseItem = await read(req.body.id);
+		const id = req.params.id;
+		console.log('Get course Item');
+		const courseItem = await read(id);
 		console.log(courseItem);
 		res.send(courseItem);
 	} catch (err) {
@@ -32,12 +33,11 @@ cItemRouter.put('/', async (req, res) => {
 	} catch (err) {
 		console.error(err);
 	}
-
 });
 
 cItemRouter.delete('/', async (req, res) => {
 	try {
-		del(req.body.id);
+		await del(req.body.id);
 		console.log('Delete Course Item');
 		res.send('Delete cItemRouter');
 	} catch (err) {
