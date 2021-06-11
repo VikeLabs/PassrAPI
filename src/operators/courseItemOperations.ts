@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const create = async (courseItem: CourseItemInterface) => {
 	try {
-		const uuid = uuidv4();
-		courseItem.id = uuid;
+		const hashKey = uuidv4();
+		courseItem.id = hashKey;
+		console.log('id: ' + courseItem.id);
 		await CourseItem.create(courseItem);
 	} catch (err) {
 		console.error(err);
@@ -28,10 +29,10 @@ export const read = async (key: string) => {
 
 export const update = async (data: Partial<CourseItemInterface>) => {
 	try {
-		// const id = data.id;
-		// delete data.id;
-		// await CourseItem.update({ id }, data);
-		await CourseItem.update(data);
+		const id = data.id;
+		delete data.id;
+		await CourseItem.update({ id }, data);
+		// await CourseItem.update(data);
 	} catch (err) {
 		console.error(err);
 	}
