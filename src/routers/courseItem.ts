@@ -5,11 +5,16 @@ const cItemRouter = express.Router();
 
 cItemRouter.get('/:id', async (req, res) => {
 	try {
-		const id = req.params.id;
 		console.log('Get course Item');
-		const courseItem = await read(id);
-		console.log(courseItem);
-		res.send(courseItem);
+		const id = req.params.id;
+		console.log(id);
+		if (id) {
+			const courseItem = await read(id);
+			console.log(courseItem);
+			res.send(courseItem);
+		} else {
+			throw 'ERROR - id undefined.';
+		}
 	} catch (err) {
 		console.error(err);
 	}
