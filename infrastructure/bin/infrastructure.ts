@@ -15,13 +15,10 @@ const devAuth = new AuthStack(app, `${constants.PROJECT_PREFIX}-dev-Auth`, {
 });
 
 const devAPI = new APIStack(app, `${constants.PROJECT_PREFIX}-dev-API`, {
-	env: {
-		account: process.env.CDK_DEFAULT_ACCOUNT,
-		region: process.env.CDK_DEFAULT_REGION,
-	},
 	userPool: devAuth.userPool,
 	userPoolClient: devAuth.userPoolClient,
 	envPrefix: devEnvPrefix,
+	apiDomain: constants.DEV_API_URL,
 });
 
 new DBStack(app, `${constants.PROJECT_PREFIX}-dev-DB`, {

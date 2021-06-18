@@ -26,7 +26,7 @@ export class AuthStack extends cdk.Stack {
 					minLength: 8,
 					requireLowercase: true,
 					requireUppercase: true,
-					tempPasswordValidity: cdk.Duration.hours(12),
+					tempPasswordValidity: cdk.Duration.days(2),
 				},
 				signInAliases: {
 					email: true,
