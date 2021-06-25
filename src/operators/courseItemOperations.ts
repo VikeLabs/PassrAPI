@@ -13,10 +13,10 @@ export const create = async (courseItem: CourseItemInterface) => {
 };
 
 // NOTE: any reference to key is referring to the hash key, or the `id` parameter in all the models.
-export const read = async (key: string, user: string) => {
+export const read = async (key: string, userID: string) => {
 	try {
 		const courseItem = await CourseItem.get(key);
-		if (courseItem && courseItem.owner == user) {
+		if (courseItem && courseItem.owner == userID) {
 			return courseItem;
 		} else {
 			throw 'ERROR - could not read courseItem with key ' + key;
