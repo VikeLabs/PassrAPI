@@ -7,13 +7,13 @@ cItemRouter.get('/:id', async (req, res) => {
 	try {
 		console.log('Get course Item');
 		const id = req.params.id;
-		console.log(id);
-		if (id) {
-			const courseItem = await read(id);
+		const userID = req.header('userID');
+		if (id && userID) {
+			const courseItem = await read(id, userID);
 			console.log(courseItem);
 			res.send(courseItem);
 		} else {
-			throw 'ERROR - id undefined.';
+			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
 		console.error(err);
@@ -22,9 +22,12 @@ cItemRouter.get('/:id', async (req, res) => {
 
 cItemRouter.post('/', async (req, res) => {
 	try {
-		await update(req.body);
-		console.log('Post Course Item');
-		res.send('Post cItemRouter');
+		const userID = req.header('userID');
+		if (userID) {
+			await update(req.body, userID);
+			console.log('Post Course Item');
+			res.send('Post cItemRouter');
+		}
 	} catch (err) {
 		console.error(err);
 	}
@@ -42,9 +45,12 @@ cItemRouter.put('/', async (req, res) => {
 
 cItemRouter.delete('/', async (req, res) => {
 	try {
-		await del(req.body.id);
-		console.log('Delete Course Item');
-		res.send('Delete cItemRouter');
+		const userID = req.header('userID');
+		if (userID) {
+			await del(req.body.id, userID);
+			console.log('Delete Course Item');
+			res.send('Delete cItemRouter');
+		}
 	} catch (err) {
 		console.error(err);
 	}
