@@ -1,11 +1,14 @@
 import CourseItem, { CourseItemInterface } from '../models/courseItem';
 import { v4 as uuidv4 } from 'uuid';
+import { checkUserId } from '../index';
+
+const checkCourseItemUser = (key: string, userId: string) => checkUserId(CourseItem.get)(key, userId);
 
 export const create = async (courseItem: CourseItemInterface) => {
 	try {
 		const hashKey = uuidv4();
 		courseItem.id = hashKey;
-		console.log('id: ' + courseItem.id);
+		console.log(courseItem.name + ' id: ' + courseItem.id);
 		await CourseItem.create(courseItem);
 	} catch (err) {
 		console.error(err);
@@ -33,7 +36,8 @@ export const update = async (
 	try {
 		if (data.id) {
 			const key = data.id;
-			if (await checkUserID(key, userID)) {
+			// if (await checkUserID(key, userID)) {
+			if (await checkCourseItemUser(key, userID)) {
 				await CourseItem.update(data);
 			} else {
 				throw "ERROR - userID doesn't match";
@@ -46,7 +50,8 @@ export const update = async (
 
 export const del = async (key: string, userID: string) => {
 	try {
-		if (checkUserID(key, userID)) {
+		// if (checkUserId(key, userID)) {
+		if (await checkCourseItemUser(key, userID)) {
 			await CourseItem.delete(key);
 			console.log('Deletion of document with id ' + key + ' successful.');
 		}
@@ -55,7 +60,7 @@ export const del = async (key: string, userID: string) => {
 	}
 };
 
-const checkUserID = async (key: string, userID: string) => {
-	const courseItem = await CourseItem.get(key);
-	return courseItem.owner == userID;
-};
+// const checkUserID = async (key: string, userID: string) => {
+// 	const courseItem = await CourseItem.get(key);
+// 	return courseItem.owner == userID;
+// };
