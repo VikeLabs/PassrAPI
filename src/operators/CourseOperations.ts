@@ -1,36 +1,46 @@
 import Course, { CourseInterface } from '../models/course';
 
 export const create = async (course: CourseInterface) => {
-    try {
-        Course.create(course);
+	try {
+		await Course.create(course);
+		console.log(
+			'SUCCESS: Creation of course with id ' + course.id + ' successful.'
+		);
 	} catch (err) {
-        console.error(err);
+		new Error('Failed to create course with id' + course.id);
 	}
 };
 
-// NOTE: any reference to key is referring to the hash key, or the `id` parameter in all the models.
 export const read = async (key: string) => {
-    try {
-        // add some kind of security check here?
-        return await Course.get(key);
-    } catch (err) {
-        console.error(err);
-    }
+	const course = await Course.get(key);
+	console.log(course);
+	if (course) {
+		return course;
+	} else {
+		new Error('Failed to get course with id' + key);
+	}
 };
 
-export const update = async (key: string, data: Partial<CourseInterface>) => {
+export const update = async (data: Partial<CourseInterface>) => {
+	const key = data.id;
 	try {
-		Course.update({ id: key }, data);
+        if(key) {
+			await Course.get(key);
+            await Course.update(data);
+        } else {
+			throw new Error();
+		}
+
 	} catch (err) {
-		console.error(err);
+		new Error('Failed to update course with id' + key);
 	}
 };
 
 export const del = async (key: string) => {
     try {
         Course.delete(key);
-        console.log('Deletion of course with id ' + key + ' successful.');
+        console.log('SUCCESS: Deletion of course with id ' + key + ' successful.');
     } catch (err) {
-        console.error(err);
+        new Error('Failed to delete course with id' + key);
     }
 };

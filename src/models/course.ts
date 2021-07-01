@@ -5,7 +5,10 @@ import FractionInterface, { fraction } from './fraction';
 
 export const courseSchema = new dynamoose.Schema(
     {
-        id: String,
+        id: {
+			type: String,
+			hashKey: true,
+		},
         name: String,
         desiredGrade: [Number, fraction],
         courseItems: {
@@ -23,29 +26,30 @@ export const courseSchema = new dynamoose.Schema(
 );
 
 export interface CourseInterface extends Document {
-    id: string;
+    id: string,
     name: string;
     desiredGrade: number | FractionInterface;
-    courseItems: CourseItemInterface[];
-    owner: string;
+    courseItems?: Set<CourseItemInterface>;
+    owner: string
 }
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
 
-function CreateCourse({
-	id,
-	name,
-	desiredGrade,
-	courseItems,
-	owner,
-}: CourseInterface) {
-	Course.create({
-		id: id,
-		name: name,
-		desiredGrade: desiredGrade,
-		courseItems: courseItems,
-		owner: owner,
-	});
-}
+// function CreateCourse({
+// 	id,
+// 	name,
+// 	desiredGrade,
+// 	courseItems,
+// 	owner,
+// }: CourseInterface) {
+//     console.log('In operations');
+// 	Course.create({
+// 		id: id,
+// 		name: name,
+// 		desiredGrade: desiredGrade,
+// 		courseItems: courseItems,
+// 		owner: owner,
+// 	});
+// }
 
 export default Course;
