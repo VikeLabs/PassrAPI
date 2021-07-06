@@ -13,8 +13,7 @@ semesterRouter.get('/:id', async (req, res) => {
 		};
 		res.send(resData);
 	} catch (err) {
-		console.log(err);
-		res.send(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -24,8 +23,7 @@ semesterRouter.put('/', async (req, res) => {
 		console.log('Put Semester');
 		res.send(req.body.name + ' created successfully');
 	} catch (err) {
-		console.log(err);
-		res.send(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -35,8 +33,7 @@ semesterRouter.post('/', async (req, res) => {
 		console.log('Post Semester');
 		res.send('Semester updated');
 	} catch (err) {
-		console.log(err);
-		res.send(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -46,8 +43,7 @@ semesterRouter.delete('/', async (req, res) => {
 		console.log('Delete Semester');
 		res.send('Semester deleted');
 	} catch (err) {
-		console.log(err);
-		res.send(err);
+		res.status(404).send(err);
 	}
 });
 export default semesterRouter;
