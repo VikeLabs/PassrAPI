@@ -3,10 +3,10 @@ import { create, read, update, del } from '../operators/semesterOperations';
 
 const semesterRouter = express.Router();
 
-semesterRouter.get('/', async (req, res) => {
+semesterRouter.get('/:id', async (req, res) => {
 	try {
 		console.log('Get Semester');
-		const semester = await read(req.body.id);
+		const semester = await read(req.params.id);
 		const resData = {
 			...semester,
 			courses: Array.from(semester?.courses || []),

@@ -4,6 +4,7 @@ export const create = async (semester: SemesterInterface) => {
 	try {
 		await Semester.create(semester);
 	} catch (err) {
+		console.log(err);
 		throw 'ERROR: semester not created';
 	}
 };
@@ -21,8 +22,8 @@ export const read = async (key: string) => {
 
 export const update = async (data: Partial<SemesterInterface>) => {
 	let updated = false;
-	if (typeof data.id == 'string') {
-		const key: string = data.id;
+	if (data.id) {
+		const key = data.id;
 		const semester = await Semester.get(key);
 		if (semester && (await Semester.update(data))) {
 			updated = true;
@@ -43,6 +44,7 @@ export const del = async (key: string) => {
 			throw 'ERROR';
 		}
 	} catch (err) {
+		console.log(err);
 		throw 'ERROR: semester not deleted';
 	}
 };
