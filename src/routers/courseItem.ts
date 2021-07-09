@@ -16,7 +16,7 @@ cItemRouter.get('/:id', async (req, res) => {
 			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
-		console.error(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -29,7 +29,7 @@ cItemRouter.post('/', async (req, res) => {
 			res.send('Post cItemRouter');
 		}
 	} catch (err) {
-		console.error(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -39,7 +39,7 @@ cItemRouter.put('/', async (req, res) => {
 		console.log('Put Course Item');
 		res.send('Put cItemRouter: ' + req.body.name);
 	} catch (err) {
-		console.error(err);
+		res.status(404).send(err);
 	}
 });
 
@@ -52,7 +52,7 @@ cItemRouter.delete('/', async (req, res) => {
 			res.send('Delete cItemRouter');
 		}
 	} catch (err) {
-		console.error(err);
+		res.status(404).send(err);
 	}
 });
 
