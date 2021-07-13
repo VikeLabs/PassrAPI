@@ -8,6 +8,7 @@ export const create = async (courseItem: CourseItemInterface) => {
 	try {
 		const hashKey = uuidv4();
 		courseItem.id = hashKey;
+		// logs uuid of new courseItem for testing
 		console.log(courseItem.name + ' id: ' + courseItem.id);
 		await CourseItem.create(courseItem);
 	} catch (err) {
