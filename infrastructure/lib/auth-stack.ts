@@ -19,9 +19,6 @@ export class AuthStack extends cdk.Stack {
 			{
 				accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
 				autoVerify: { email: true },
-				emailSettings: {
-					from: constants.AUTH_FROM_EMAIL,
-				},
 				passwordPolicy: {
 					minLength: 8,
 					requireLowercase: true,
@@ -50,6 +47,15 @@ export class AuthStack extends cdk.Stack {
 				},
 			}
 		);
+
+		const cfnUserPool = this.userPool.node
+			.defaultChild as cognito.CfnUserPool;
+
+		cfnUserPool.emailConfiguration = {
+			emailSendingAccount: 'DEVELOPER',
+			from: `Passr Account Management<${constants.AUTH_FROM_EMAIL}>`,
+			sourceArn: `arn:aws:ses:us-west-2:006316662763:identity/no-reply@passr.ca`,
+		};
 
 		this.userPoolClient = new cognito.UserPoolClient(
 			this,

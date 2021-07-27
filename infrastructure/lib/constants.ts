@@ -7,8 +7,9 @@ Welcome to Passr!
 Your verification code is {####}
 `;
 
-const DEV_API_URL = 'api.dev.passr.ca';
-const PROD_API_URL = 'api.passr.ca';
+const BASE_DOMAIN_URL = 'passr.ca';
+const DEV_API_URL_PREFIX = `dev.api`;
+const PROD_API_URL_PREFIX = `api`;
 
 const HOSTED_ZONE_ID_PARAM = 'ROUTE_53_HOSTED_ZONE_ID_SSM_PARAM';
 const HOSTED_ZONE_NAME_PARAM = 'ROUTE_53_HOSTED_ZONE_NAME_PARAM';
@@ -21,8 +22,9 @@ export default {
 	AUTH_EMAIL_SUBJECT,
 	AUTH_FROM_EMAIL,
 	CERTIFICATE_ARN_PARAM,
-	DEV_API_URL,
-	PROD_API_URL,
+	BASE_DOMAIN_URL,
+	DEV_API_URL_PREFIX,
+	PROD_API_URL_PREFIX,
 	HOSTED_ZONE_ID_PARAM,
 	HOSTED_ZONE_NAME_PARAM,
 	PROJECT_PREFIX,

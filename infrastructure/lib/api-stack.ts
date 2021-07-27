@@ -15,6 +15,7 @@ interface APIStackProps extends cdk.StackProps {
 	userPoolClient: cognito.IUserPoolClient;
 	envPrefix: string;
 	apiDomain: string;
+	certificate: certificateManager.ICertificate;
 }
 
 export class APIStack extends cdk.Stack {
@@ -43,31 +44,23 @@ export class APIStack extends cdk.Stack {
 
 		bucket.grantReadWrite(this.handler);
 
-		const userPoolRegion = props.userPool.userPoolId.split('_')[0];
+		console.log('JWT Issuer');
+		console.log(
+			`https://cognito-idp.${props.userPool.env.region}.amazonaws.com/${props.userPool.userPoolId}`
+		);
 
 		const authorizer = new authorizers.HttpJwtAuthorizer({
 			identitySource: ['$request.header.Authorization'],
 			jwtAudience: [props.userPoolClient.userPoolClientId],
-			jwtIssuer: `https://cognito-idp.${userPoolRegion}.amazonaws.com/${props.userPool.userPoolId}`,
+			jwtIssuer: `https://cognito-idp.${props.userPool.env.region}.amazonaws.com/${props.userPool.userPoolId}`,
 			authorizerName: 'RouteAuthorizer',
 		});
-
-		const certificateArn = ParamFactories.CertificateArn(
-			this,
-			'CertificateArn'
-		);
-
-		const certificate = certificateManager.Certificate.fromCertificateArn(
-			this,
-			'DomainCertificate',
-			certificateArn
-		);
 
 		const apiDomainName = new apigateway.DomainName(
 			this,
 			`${constants.PROJECT_PREFIX}-${props.envPrefix}-APIDomain`,
 			{
-				certificate,
+				certificate: props.certificate,
 				domainName: props.apiDomain,
 			}
 		);
@@ -86,6 +79,7 @@ export class APIStack extends cdk.Stack {
 		const integration = new integrations.LambdaProxyIntegration({
 			handler: this.handler,
 		});
+
 		api.addRoutes({
 			integration,
 			path: '/{proxy+}',
@@ -121,6 +115,7 @@ export class APIStack extends cdk.Stack {
 			`${constants.PROJECT_PREFIX}-${props.envPrefix}-APIRecord`,
 			{
 				recordType: route53.RecordType.A,
+				recordName: props.apiDomain + '.', // without trailing dot the root domain will get appended
 				target: route53.RecordTarget.fromAlias(apiTarget),
 				zone: hostedZone,
 				ttl: cdk.Duration.hours(1),
