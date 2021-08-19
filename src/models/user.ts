@@ -3,21 +3,28 @@ import { Document } from 'dynamoose/dist/Document';
 import Semester, { SemesterInterface } from './semester';
 
 export const userSchema = new dynamoose.Schema(
-    {
-        id: String,
-        semesters: {
-            type: Array,
-            schema: Semester,
-        },
-    },
-    {
-        timestamps: true,
-    }
+	{
+		id: {
+			type: String,
+			hashKey: true,
+		},
+		semesters: {
+			type: Set,
+			schema: [Semester],
+		},
+		owner: {
+			type: String,
+		},
+	},
+	{
+		timestamps: true,
+	}
 );
 
 export interface UserInterface extends Document {
-    owner: string;
-    semesters: SemesterInterface[];
+	id: string;
+	owner: string;
+	semesters: SemesterInterface[];
 }
 
 const User = dynamoose.model<UserInterface>('User', userSchema);
