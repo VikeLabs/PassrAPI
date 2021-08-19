@@ -5,10 +5,9 @@ const userRouter = express.Router();
 
 userRouter.get('/:id', async (req, res) => {
 	try {
+		console.log('Get User');
 		const user = await read(req.params.id);
-		console.log(user);
 		res.send({ ...user, semesters: Array.from(user?.semesters || []) });
-		res.send('Got User');
 	} catch (e) {
 		res.status(404).send(e);
 		console.error('error: ' + res.statusCode);
@@ -17,8 +16,8 @@ userRouter.get('/:id', async (req, res) => {
 
 userRouter.post('/', async (req, res) => {
 	try {
+		console.log('Post User');
 		await update(req.body);
-		console.log(req.body);
 		res.send('User posted');
 	} catch (e) {
 		res.status(404).send(e);
@@ -28,8 +27,8 @@ userRouter.post('/', async (req, res) => {
 
 userRouter.put('/', async (req, res) => {
 	try {
+		console.log('Put User');
 		await create(req.body);
-		console.log(req.body);
 		res.send('User Created');
 	} catch (e) {
 		res.status(404).send(e);
@@ -39,6 +38,7 @@ userRouter.put('/', async (req, res) => {
 
 userRouter.delete('/', async (req, res) => {
 	try {
+		console.log('Delete User');
 		await del(req.body.id);
 		res.send('User Deleted');
 	} catch (e) {
