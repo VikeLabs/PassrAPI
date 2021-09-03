@@ -3,6 +3,8 @@ import { create, read, update, del } from '../operators/semesterOperations';
 
 const semesterRouter = express.Router();
 
+const errorResponse = 'Semester not found.';
+
 semesterRouter.get('/:id', async (req, res) => {
 	try {
 		console.log('Get Semester');
@@ -13,7 +15,7 @@ semesterRouter.get('/:id', async (req, res) => {
 		};
 		res.send(resData);
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(errorResponse);
 	}
 });
 
@@ -23,7 +25,7 @@ semesterRouter.put('/', async (req, res) => {
 		console.log('Put Semester');
 		res.send(req.body.name + ' created successfully');
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(errorResponse);
 	}
 });
 
@@ -33,7 +35,7 @@ semesterRouter.post('/', async (req, res) => {
 		console.log('Post Semester');
 		res.send('Semester updated');
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(errorResponse);
 	}
 });
 
@@ -43,7 +45,7 @@ semesterRouter.delete('/', async (req, res) => {
 		console.log('Delete Semester');
 		res.send('Semester deleted');
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(errorResponse);
 	}
 });
 export default semesterRouter;
