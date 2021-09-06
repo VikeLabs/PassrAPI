@@ -37,9 +37,15 @@ cItemRouter.post('/', async (req, res) => {
 
 cItemRouter.put('/', async (req, res) => {
 	try {
-		await create(req.body);
-		console.log('Put Course Item');
-		res.send('Put cItemRouter: ' + req.body.name);
+		const userID = req.header('userID');
+		if (userID) {
+			// convert weight, grade to number
+			req.body.weight = Number(req.body.weight);
+			req.body.grade = Number(req.body.grade);
+			await create(req.body, userID);
+			console.log('Put Course Item');
+			res.send('Put cItemRouter: ' + req.body.name);
+		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
