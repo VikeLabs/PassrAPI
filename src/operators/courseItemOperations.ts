@@ -4,6 +4,8 @@ import { checkUserId } from './index';
 
 const checkCourseItemUser = checkUserId(CourseItem.get);
 
+const ERROR_RESPONSE = 'Course item not found.';
+
 export const create = async (courseItem: CourseItemInterface) => {
 	try {
 		const hashKey = uuidv4();
@@ -12,7 +14,7 @@ export const create = async (courseItem: CourseItemInterface) => {
 		console.log(courseItem.name + ' id: ' + courseItem.id);
 		await CourseItem.create(courseItem);
 	} catch (err) {
-		console.error(err);
+		console.error(ERROR_RESPONSE);
 	}
 };
 
@@ -26,7 +28,7 @@ export const read = async (key: string, userID: string) => {
 			throw 'ERROR - could not read courseItem with key ' + key;
 		}
 	} catch (err) {
-		console.error(err);
+		console.error(ERROR_RESPONSE);
 	}
 };
 
@@ -45,7 +47,7 @@ export const update = async (
 			}
 		}
 	} catch (err) {
-		console.error(err);
+		console.error(ERROR_RESPONSE);
 	}
 };
 
@@ -57,6 +59,6 @@ export const del = async (key: string, userID: string) => {
 			console.log('Deletion of document with id ' + key + ' successful.');
 		}
 	} catch (err) {
-		console.error(err);
+		console.error(ERROR_RESPONSE);
 	}
 };
