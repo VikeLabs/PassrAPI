@@ -3,6 +3,8 @@ import { create, read, update, del } from '../operators/courseItemOperations';
 
 const cItemRouter = express.Router();
 
+const ERROR_RESPONSE = 'Course item not found.';
+
 cItemRouter.get('/:id', async (req, res) => {
 	try {
 		console.log('Get course Item');
@@ -16,7 +18,7 @@ cItemRouter.get('/:id', async (req, res) => {
 			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -29,7 +31,7 @@ cItemRouter.post('/', async (req, res) => {
 			res.send('Post cItemRouter');
 		}
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -39,7 +41,7 @@ cItemRouter.put('/', async (req, res) => {
 		console.log('Put Course Item');
 		res.send('Put cItemRouter: ' + req.body.name);
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -52,7 +54,7 @@ cItemRouter.delete('/', async (req, res) => {
 			res.send('Delete cItemRouter');
 		}
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
