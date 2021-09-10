@@ -25,6 +25,7 @@ export class AuthStack extends cdk.Stack {
 					requireUppercase: true,
 					tempPasswordValidity: cdk.Duration.days(2),
 				},
+				selfSignUpEnabled: true,
 				signInAliases: {
 					email: true,
 					phone: false,
@@ -63,6 +64,13 @@ export class AuthStack extends cdk.Stack {
 			{
 				userPool: this.userPool,
 				authFlows: { userSrp: true },
+				oAuth: {
+					callbackUrls: [
+						`https://${constants.BASE_DOMAIN_URL}`,
+						`https://${constants.DEV_URL_PREFIX}.${constants.BASE_DOMAIN_URL}`,
+					],
+					scopes: [cognito.OAuthScope.OPENID],
+				},
 			}
 		);
 	}

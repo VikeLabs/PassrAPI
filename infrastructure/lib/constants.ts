@@ -8,6 +8,7 @@ Your verification code is {####}
 `;
 
 const BASE_DOMAIN_URL = 'passr.ca';
+const DEV_URL_PREFIX = 'dev';
 const DEV_API_URL_PREFIX = `dev.api`;
 const PROD_API_URL_PREFIX = `api`;
 
@@ -23,6 +24,7 @@ export default {
 	AUTH_FROM_EMAIL,
 	CERTIFICATE_ARN_PARAM,
 	BASE_DOMAIN_URL,
+	DEV_URL_PREFIX,
 	DEV_API_URL_PREFIX,
 	PROD_API_URL_PREFIX,
 	HOSTED_ZONE_ID_PARAM,
