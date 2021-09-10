@@ -8,12 +8,11 @@ export const create = async (course: CourseInterface) => {
 	try {
 		const hashKey = uuidv4();
 		course.id = hashKey;
+
 		await Course.create(course);
-		console.log(
-			'SUCCESS: Creation of course with id ' + course.id + ' successful.'
-		);
+
 	} catch (err) {
-		new Error('Failed to create course with id' + course.id);
+		throw new Error('Failed to create course with id' + course.id);
 	}
 };
 
@@ -24,10 +23,11 @@ export const read = async (key: string, userID: string) => {
 		if (course && course.owner == userID) {
 			return course;
 		} else {
-			throw 'ERROR - could not read course with key ' + key;
+			throw new Error();
 		}
+
 	} catch (err) {
-		console.error(err);
+		throw new Error('ERROR - could not read course with key ' + key);
 	}
 
 };
@@ -42,11 +42,12 @@ export const update = async (data: Partial<CourseInterface>, userID: string
 			if (isOwner) {
 				await Course.update(data);
 			} else {
-				throw "ERROR - userID doesn't match";
+				throw new Error();
 			}
 		}
+
 	} catch (err) {
-		new Error('Failed to update course due to ' + err);
+		throw new Error("ERROR - userID doesn't match");
 	}
 };
 
@@ -56,9 +57,11 @@ export const del = async (key: string, userID: string) => {
 
 		if (isOwner) {
 			await Course.delete(key);
-			console.log('Deletion of document with id ' + key + ' successful.');
+		} else {
+			throw new Error();
 		}
+		
 	} catch (err) {
-		console.error(err);
+		throw new Error('ERROR - could not delete course with key ' + key);
 	}
 };

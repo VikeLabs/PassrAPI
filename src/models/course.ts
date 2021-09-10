@@ -26,11 +26,11 @@ export const courseSchema = new dynamoose.Schema(
 );
 
 export interface CourseInterface extends Document {
-    id: string
+    id: string;
     name: string;
     desiredGrade: number | FractionInterface;
     courseItems?: Set<CourseItemInterface>;
-    owner: string
+    owner: string;
 }
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);

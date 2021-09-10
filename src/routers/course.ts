@@ -2,9 +2,6 @@ import express from 'express';
 import { create, read, update, del } from '../operators/courseOperations';
 
 const courseRouter = express.Router();
-const app = express();
-
-app.use(express.json());
 
 courseRouter.get('/:id', async (req, res) => {
 	try {
@@ -13,12 +10,22 @@ courseRouter.get('/:id', async (req, res) => {
 
 		if (id && userID) {
 			const course = await read(id, userID);
-			res.send(course);
+
+			if (course) {
+				const resData = {
+					...course,
+					courseItems: Array.from(course.courseItems || []),
+				};
+				res.send(resData);
+			} else {
+				throw 'ERROR - course undefined';
+			}
+
 		} else {
 			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send('Not found.');
 	}
 
 });
@@ -26,8 +33,8 @@ courseRouter.get('/:id', async (req, res) => {
 courseRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		if (userID) {
 
+		if (userID) {
 			await update(req.body, userID);
 			console.log('Post Course');
 			res.send('Post courseRouter');
@@ -44,21 +51,21 @@ courseRouter.put('/', async (req, res) => {
 		console.log('Put Course');
 		res.send('Put courseRouter: ' + req.body.name);
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send('Not found.');
 	}
 });
 
 courseRouter.delete('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		
+
 		if (userID) {
 			await del(req.body.id, userID);
 			console.log('Delete Course');
 			res.send('Delete courseRouter');
 		}
 	} catch (err) {
-		res.status(404).send(err);
+		res.status(404).send('Not found.');
 	}
 });
 
