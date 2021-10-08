@@ -6,9 +6,9 @@ import FractionInterface, { fraction } from './fraction';
 export const courseSchema = new dynamoose.Schema(
     {
         id: {
-            type: String,
-            hashKey: true,
-        },
+			type: String,
+			hashKey: true,
+		},
         name: String,
         desiredGrade: [Number, fraction],
         courseItems: {
@@ -29,10 +29,11 @@ export interface CourseInterface extends Document {
     id: string;
     name: string;
     desiredGrade: number | FractionInterface;
-    courseItems: CourseItemInterface[];
+    courseItems?: Set<CourseItemInterface>;
     owner: string;
 }
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
+
 
 export default Course;
