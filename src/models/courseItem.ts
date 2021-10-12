@@ -3,34 +3,37 @@ import { Document } from 'dynamoose/dist/Document';
 import FractionInterface, { fraction } from './fraction';
 
 export const courseItemSchema = new dynamoose.Schema(
-    {
-        id: String,
-        name: String,
-        weight: Number,
-        grade: [Number, fraction],
-        dueDate: Date,
-        owner: {
-            type: String,
-            required: true,
-        },
-    },
-    {
-        timestamps: true,
-    }
+	{
+		id: {
+			type: String,
+			hashKey: true,
+		},
+		name: String,
+		weight: Number,
+		grade: [Number, fraction],
+		dueDate: Date,
+		owner: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		timestamps: true,
+	}
 );
 
 export interface CourseItemInterface extends Document {
-    id: string;
-    name: string;
-    weight: number;
-    grade?: number | FractionInterface;
-    dueDate?: Date;
-    owner: string;
+	id: string;
+	name: string;
+	weight: number;
+	grade?: number | FractionInterface;
+	dueDate?: Date;
+	owner: string;
 }
 
 const CourseItem = dynamoose.model<CourseItemInterface>(
-    'CourseItem',
-    courseItemSchema
+	'CourseItem',
+	courseItemSchema
 );
 
 export default CourseItem;

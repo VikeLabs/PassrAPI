@@ -32,4 +32,5 @@ export interface CourseInterface extends Document {
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
 
+
 export default Course;

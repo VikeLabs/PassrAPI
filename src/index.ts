@@ -11,13 +11,14 @@ const port = 5000;
 const app = express();
 
 app.use(express.json());
+
 app.get('/', (req, res) => {
 	res.send('Successful PassrAPI!');
 });
 
 app.use('/user', userRouter);
 app.use('/semester', semesterRouter);
-app.use('/coure', courseRouter);
+app.use('/course', courseRouter);
 app.use('/courseItem', cItemRouter);
 
 (async () => {
