@@ -7,13 +7,11 @@ export const userSchema = new dynamoose.Schema(
 		id: {
 			type: String,
 			hashKey: true,
+			required: true,
 		},
 		semesters: {
 			type: Set,
 			schema: [Semester],
-		},
-		owner: {
-			type: String,
 		},
 	},
 	{
@@ -24,7 +22,7 @@ export const userSchema = new dynamoose.Schema(
 export interface UserInterface extends Document {
 	id: string;
 	owner: string;
-	semesters: SemesterInterface[];
+	semesters?: Set<SemesterInterface>;
 }
 
 const User = dynamoose.model<UserInterface>('User', userSchema);

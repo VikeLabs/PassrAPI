@@ -2,6 +2,7 @@ import express from 'express';
 import { create, read, update, del } from '../operators/UserOperations';
 
 const userRouter = express.Router();
+const userError = 'User not found.';
 
 userRouter.get('/:id', async (req, res) => {
 	try {
@@ -9,8 +10,8 @@ userRouter.get('/:id', async (req, res) => {
 		const user = await read(req.params.id);
 		res.send({ ...user, semesters: Array.from(user?.semesters || []) });
 	} catch (e) {
-		res.status(404).send(e);
-		console.error('error: ' + res.statusCode);
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
 	}
 });
 
@@ -20,8 +21,8 @@ userRouter.post('/', async (req, res) => {
 		await update(req.body);
 		res.send('User posted');
 	} catch (e) {
-		res.status(404).send(e);
-		console.error(e + res.statusCode);
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
 	}
 });
 
@@ -31,8 +32,8 @@ userRouter.put('/', async (req, res) => {
 		await create(req.body);
 		res.send('User Created');
 	} catch (e) {
-		res.status(404).send(e);
-		console.error(e + res.statusCode);
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
 	}
 });
 
@@ -42,8 +43,8 @@ userRouter.delete('/', async (req, res) => {
 		await del(req.body.id);
 		res.send('User Deleted');
 	} catch (e) {
-		res.status(404).send(e);
-		console.error(e + res.statusCode);
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
 	}
 });
 
