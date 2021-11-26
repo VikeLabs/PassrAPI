@@ -4,10 +4,12 @@ import { create, read, update, del } from '../operators/UserOperations';
 const userRouter = express.Router();
 const userError = 'User not found.';
 
-userRouter.get('/:id', async (req, res) => {
+userRouter.get('/', async (req, res) => {
 	try {
-		console.log('Get User');
-		const user = await read(req.params.id);
+		if (!req.userId) {
+			throw 'ERROR: No user ID found.';
+		}
+		const user = await read(req.userId);
 		res.send({ ...user, semesters: Array.from(user?.semesters || []) });
 	} catch (e) {
 		res.status(404).send(userError);
@@ -17,7 +19,6 @@ userRouter.get('/:id', async (req, res) => {
 
 userRouter.post('/', async (req, res) => {
 	try {
-		console.log('Post User');
 		await update(req.body);
 		res.send('User posted');
 	} catch (e) {
@@ -28,7 +29,6 @@ userRouter.post('/', async (req, res) => {
 
 userRouter.put('/', async (req, res) => {
 	try {
-		console.log('Put User');
 		await create(req.body);
 		res.send('User Created');
 	} catch (e) {
@@ -39,7 +39,6 @@ userRouter.put('/', async (req, res) => {
 
 userRouter.delete('/', async (req, res) => {
 	try {
-		console.log('Delete User');
 		await del(req.body.id);
 		res.send('User Deleted');
 	} catch (e) {
