@@ -39,7 +39,10 @@ userRouter.put('/', async (req, res) => {
 
 userRouter.delete('/', async (req, res) => {
 	try {
-		await del(req.body.id);
+		if (!req.userId) {
+			throw 'ERROR: No user ID found.';
+		}
+		await del(req.userId);
 		res.send('User Deleted');
 	} catch (e) {
 		res.status(404).send(userError);
