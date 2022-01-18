@@ -7,8 +7,21 @@ const checkCourseItemUser = checkUserId(CourseItem.get);
 export const create = async (courseItem: CourseItemInterface) => {
 	const hashKey = uuidv4();
 	courseItem.id = hashKey;
-	// logs uuid of new courseItem for testing
-	console.log(courseItem.name + ' id: ' + courseItem.id);
+	// logs uuid of new courseItem [[ for testing ]]
+	// console.log(courseItem.name + ' id: ' + courseItem.id);
+	// console.log(courseItem.name + ' grade: ' + courseItem.grade);
+
+	// if grade, weight, and/or date fields are empty, set to undefined
+	if (!courseItem.grade) {
+		courseItem.grade = undefined;
+	}
+	if (!courseItem.weight) {
+		courseItem.weight = undefined;
+	}
+	if (!courseItem.date) {
+		courseItem.date = undefined;
+	}
+
 	await CourseItem.create(courseItem);
 };
 
@@ -42,5 +55,7 @@ export const del = async (key: string, userID: string) => {
 	if (isOwner) {
 		await CourseItem.delete(key);
 		console.log('Deletion of document with id ' + key + ' successful.');
+	} else {
+		throw "ERROR - userID doesn't match";
 	}
 };
