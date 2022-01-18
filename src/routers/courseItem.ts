@@ -12,7 +12,6 @@ cItemRouter.get('/:id', async (req, res) => {
 		const userID = req.header('userID');
 		if (id && userID) {
 			const courseItem = await read(id, userID);
-			console.log(courseItem);
 			res.send(courseItem);
 		} else {
 			throw 'ERROR - id undefined';
@@ -22,13 +21,26 @@ cItemRouter.get('/:id', async (req, res) => {
 	}
 });
 
+// helper function converts string to number
+//   - should be updated to support fractions
+const numberify = (str: string) => {
+	if (str) {
+		return Number(str);
+	}
+};
+
 cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			await update(req.body, userID);
+			const body = req.body;
+			body.owner = userID;
+			body.weight = numberify(body.weight);
+			body.grade = numberify(body.grade);
+
+			await create(req.body);
 			console.log('Post Course Item');
-			res.send('Post cItemRouter');
+			res.send('Post cItemRouter: ' + req.body.name);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -37,9 +49,12 @@ cItemRouter.post('/', async (req, res) => {
 
 cItemRouter.put('/', async (req, res) => {
 	try {
-		await create(req.body);
-		console.log('Put Course Item');
-		res.send('Put cItemRouter: ' + req.body.name);
+		const userID = req.header('userID');
+		if (userID) {
+			await update(req.body, userID);
+			console.log('Put Course Item');
+			res.send('Put cItemRouter');
+		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
