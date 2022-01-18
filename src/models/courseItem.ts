@@ -11,7 +11,7 @@ export const courseItemSchema = new dynamoose.Schema(
 		name: String,
 		weight: Number,
 		grade: [Number, fraction],
-		dueDate: Date,
+		date: [String, Date],
 		owner: {
 			type: String,
 			required: true,
@@ -25,9 +25,9 @@ export const courseItemSchema = new dynamoose.Schema(
 export interface CourseItemInterface extends Document {
 	id: string;
 	name: string;
-	weight: number;
+	weight?: number;
 	grade?: number | FractionInterface;
-	dueDate?: Date;
+	date?: Date | string;
 	owner: string;
 }
 
