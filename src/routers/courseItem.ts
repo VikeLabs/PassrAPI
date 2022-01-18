@@ -12,6 +12,7 @@ cItemRouter.get('/:id', async (req, res) => {
 		const userID = req.header('userID');
 		if (id && userID) {
 			const courseItem = await read(id, userID);
+			console.log(courseItem);
 			res.send(courseItem);
 		} else {
 			throw 'ERROR - id undefined';

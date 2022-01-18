@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.use('/user', userRouter);
 app.use('/semester', semesterRouter);
-app.use('/coure', courseRouter);
+app.use('/course', courseRouter);
 app.use('/courseItem', cItemRouter);
 
 (async () => {
