@@ -17,6 +17,7 @@ export const userSchema = new dynamoose.Schema(
 	{
 		timestamps: true,
 	}
+
 );
 
 export interface UserInterface extends Document {
