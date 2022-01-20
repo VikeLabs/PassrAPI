@@ -7,9 +7,6 @@ const checkCourseItemUser = checkUserId(CourseItem.get);
 export const create = async (courseItem: CourseItemInterface) => {
 	const hashKey = uuidv4();
 	courseItem.id = hashKey;
-	// logs uuid of new courseItem [[ for testing ]]
-	// console.log(courseItem.name + ' id: ' + courseItem.id);
-	// console.log(courseItem.name + ' grade: ' + courseItem.grade);
 
 	// if grade, weight, and/or date fields are empty, set to undefined
 	if (!courseItem.grade) {
