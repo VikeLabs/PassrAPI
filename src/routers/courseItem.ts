@@ -33,13 +33,28 @@ const numberify = (str: string) => {
 cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
+		const body = req.body;
 		if (userID) {
-			const body = req.body;
-			body.owner = userID;
-			body.weight = numberify(body.weight);
-			body.grade = numberify(body.grade);
-
-			await create(req.body);
+			const courseItem = {
+				id: body.id,
+				owner: userID,
+				name: body.name,
+				weight: numberify(body.weight),
+				grade: numberify(body.grade),
+				date: body.date,
+				createdAt: body.createdAt,
+				updatedAt: body.updatedAt,
+				conformToSchema: body.conformToSchema,
+				toDynamo: body.toDynamo,
+				prepareForResponse: body.prepareForResponse,
+				original: body.original,
+				toJSON: body.toJSON,
+				serialize: body.serialize,
+				delete: body.delete,
+				save: body.save,
+				populate: body.populate,
+			};
+			await create(courseItem);
 			console.log('Post Course Item');
 			res.send('Post cItemRouter: ' + req.body.name);
 		}
