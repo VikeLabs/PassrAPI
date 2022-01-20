@@ -1,24 +1,53 @@
 import express from 'express';
+import { create, read, update, del } from '../operators/UserOperations';
 
 const userRouter = express.Router();
+const userError = 'User not found.';
 
-userRouter.get('/', (req, res) => {
-	console.log('Get User');
-	res.send('Get userRouter');
+userRouter.get('/', async (req, res) => {
+	try {
+		if (!req.userId) {
+			throw 'ERROR: No user ID found.';
+		}
+		const user = await read(req.userId);
+		res.send({ ...user, semesters: Array.from(user?.semesters || []) });
+	} catch (e) {
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
+	}
 });
 
-userRouter.post('/', (req, res) => {
-	console.log('Post User');
-	res.send('Post userRouter');
+userRouter.post('/', async (req, res) => {
+	try {
+		await update(req.body);
+		res.send('User posted');
+	} catch (e) {
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
+	}
 });
 
-userRouter.put('/', (req, res) => {
-	console.log('Put User');
-	res.send('Put userRouter');
+userRouter.put('/', async (req, res) => {
+	try {
+		await create(req.body);
+		res.send('User Created');
+	} catch (e) {
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
+	}
 });
 
-userRouter.delete('/', (req, res) => {
-	console.log('Delete User');
-	res.send('Delete userRouter');
+userRouter.delete('/', async (req, res) => {
+	try {
+		if (!req.userId) {
+			throw 'ERROR: No user ID found.';
+		}
+		await del(req.userId);
+		res.send('User Deleted');
+	} catch (e) {
+		res.status(404).send(userError);
+		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
+	}
 });
+
 export default userRouter;
