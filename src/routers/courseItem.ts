@@ -25,9 +25,13 @@ cItemRouter.get('/:id', async (req, res) => {
 // helper function converts string to number
 //   - should be updated to support fractions
 const numberify = (str: string) => {
-	if (str) {
-		return Number(str);
-	}
+     const regex = /^(\d+\.?\d*)\/(\d+\.?\d*)$/;
+     const match = str.match(regex);
+     if(match) {
+         return Number(match[1])/Number(match[2]);
+     }
+     
+     return Number(str); // Not guranteed to be a number since we don't know what is store in str
 };
 
 cItemRouter.post('/', async (req, res) => {
