@@ -1,5 +1,6 @@
 import express from 'express';
 import { create, read, update, del } from '../operators/courseItemOperations';
+import CourseItem from '../models/courseItem';
 
 const cItemRouter = express.Router();
 
@@ -22,8 +23,7 @@ cItemRouter.get('/:id', async (req, res) => {
 	}
 });
 
-// helper function converts string to number
-//   - should be updated to support fractions
+// helper function converts string to valid number-esque type
 const numberify = (str: string) => {
 	const regex = /^(\d+\.?\d*)\/(\d+\.?\d*)$/;
 	const match = str.match(regex);
@@ -37,9 +37,9 @@ const numberify = (str: string) => {
 cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		const body = req.body;
 		if (userID) {
-			const courseItem = {
+			const body = req.body;
+			const courseItem = new CourseItem({
 				id: body.id,
 				owner: userID,
 				name: body.name,
@@ -48,16 +48,7 @@ cItemRouter.post('/', async (req, res) => {
 				date: body.date,
 				createdAt: body.createdAt,
 				updatedAt: body.updatedAt,
-				conformToSchema: body.conformToSchema,
-				toDynamo: body.toDynamo,
-				prepareForResponse: body.prepareForResponse,
-				original: body.original,
-				toJSON: body.toJSON,
-				serialize: body.serialize,
-				delete: body.delete,
-				save: body.save,
-				populate: body.populate,
-			};
+			});
 			await create(courseItem);
 			console.log('Post Course Item');
 			res.send('Post cItemRouter: ' + req.body.name);
@@ -71,7 +62,18 @@ cItemRouter.put('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			await update(req.body, userID);
+			const body = req.body;
+			const courseItem = new CourseItem({
+				id: body.id,
+				owner: userID,
+				name: body.name,
+				weight: numberify(body.weight),
+				grade: numberify(body.grade),
+				date: body.date,
+				createdAt: body.createdAt,
+				updatedAt: body.updatedAt,
+			});
+			await update(courseItem, userID);
 			console.log('Put Course Item');
 			res.send('Put cItemRouter');
 		}
