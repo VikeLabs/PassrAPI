@@ -31,7 +31,7 @@ const numberify = (str: string) => {
 		return Number(match[1]) / Number(match[2]);
 	}
 
-	return Number(str); // Not guranteed to be a number since we don't know what is store in str
+	return Number(str); // Not guranteed to be a number since we don't know what is stored in str
 };
 
 cItemRouter.post('/', async (req, res) => {
