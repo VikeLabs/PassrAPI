@@ -1,5 +1,5 @@
 import express from 'express';
-import { create, read, update, del } from '../operators/courseOperations';
+import { create, read, update, del } from '../operators/CourseOperations';
 
 const courseRouter = express.Router();
 
@@ -20,17 +20,25 @@ courseRouter.get('/:id', async (req, res) => {
 			} else {
 				throw 'ERROR - course undefined';
 			}
-
 		} else {
 			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
 	}
-
 });
 
 courseRouter.post('/', async (req, res) => {
+	try {
+		await create(req.body);
+		console.log('Put Course');
+		res.send('Put courseRouter: ' + req.body.name);
+	} catch (err) {
+		res.status(404).send('Not found.');
+	}
+});
+
+courseRouter.put('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 
@@ -39,17 +47,6 @@ courseRouter.post('/', async (req, res) => {
 			console.log('Post Course');
 			res.send('Post courseRouter');
 		}
-	} catch (err) {
-		res.status(404).send('Not found.');
-	}
-
-});
-
-courseRouter.put('/', async (req, res) => {
-	try {
-		await create(req.body);
-		console.log('Put Course');
-		res.send('Put courseRouter: ' + req.body.name);
 	} catch (err) {
 		res.status(404).send('Not found.');
 	}
