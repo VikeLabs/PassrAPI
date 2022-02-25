@@ -24,11 +24,14 @@ cItemRouter.get('/:id', async (req, res) => {
 });
 
 // helper function converts string to valid number-esque type
+// note: if string is empty, will return undefined
 const numberify = (str: string) => {
 	const regex = /^(\d+\.?\d*)\/(\d+\.?\d*)$/;
 	const match = str.match(regex);
 	if (match) {
 		return Number(match[1]) / Number(match[2]);
+	} else if (str === '') {
+		return undefined;
 	}
 
 	return Number(str); // Not guranteed to be a number since we don't know what is stored in str
