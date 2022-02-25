@@ -14,7 +14,7 @@ export const create = async (
 
 	// logs uuid of new courseItem for testing
 	console.log(courseItem.name + ' id: ' + courseItem.id);
-
+  
 	await CourseItem.create(courseItem);
 };
 

@@ -1,24 +1,51 @@
 import express from 'express';
+import { create, read, update, del } from '../operators/semesterOperations';
 
 const semesterRouter = express.Router();
 
-semesterRouter.get('/', (req, res) => {
-	console.log('Get Semester');
-	res.send('Get semesterRouter');
+const ERROR_RESPONSE = 'Semester not found.';
+
+semesterRouter.get('/:id', async (req, res) => {
+	try {
+		console.log('Get Semester');
+		const semester = await read(req.params.id);
+		const resData = {
+			...semester,
+			courses: Array.from(semester?.courses || []),
+		};
+		res.send(resData);
+	} catch (err) {
+		res.status(404).send(ERROR_RESPONSE);
+	}
 });
 
-semesterRouter.post('/', (req, res) => {
-	console.log('Post Semester');
-	res.send('Post semesterRouter');
+semesterRouter.put('/', async (req, res) => {
+	try {
+		await create(req.body);
+		console.log('Put Semester');
+		res.send(req.body.name + ' created successfully');
+	} catch (err) {
+		res.status(404).send(ERROR_RESPONSE);
+	}
 });
 
-semesterRouter.put('/', (req, res) => {
-	console.log('Put Semester');
-	res.send('Put semesterRouter');
+semesterRouter.post('/', async (req, res) => {
+	try {
+		await update(req.body);
+		console.log('Post Semester');
+		res.send('Semester updated');
+	} catch (err) {
+		res.status(404).send(ERROR_RESPONSE);
+	}
 });
 
-semesterRouter.delete('/', (req, res) => {
-	console.log('Delete Semester');
-	res.send('Delete semesterRouter');
+semesterRouter.delete('/', async (req, res) => {
+	try {
+		await del(req.body.id);
+		console.log('Delete Semester');
+		res.send('Semester deleted');
+	} catch (err) {
+		res.status(404).send(ERROR_RESPONSE);
+	}
 });
 export default semesterRouter;

@@ -4,35 +4,33 @@ import CourseItem, { CourseItemInterface } from './courseItem';
 import FractionInterface, { fraction } from './fraction';
 
 export const courseSchema = new dynamoose.Schema(
-    {
-        id: {
-            type: String,
-            hashKey: true,
-        },
-        name: String,
-        desiredGrade: [Number, fraction],
-        courseItems: {
-            type: Set,
-            schema: [CourseItem],
-        },
-        owner: {
-            type: String,
-            required: true,
-        },
-    },
-    {
-        timestamps: true,
-    }
+	{
+		id: String,
+		name: String,
+		desiredGrade: [Number, fraction],
+		courseItems: {
+			type: Set,
+			schema: [CourseItem],
+		},
+		owner: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		timestamps: true,
+	}
 );
 
 export interface CourseInterface extends Document {
-    id: string;
-    name: string;
-    desiredGrade: number | FractionInterface;
-    courseItems: CourseItemInterface[];
-    owner: string;
+	id: string;
+	name: string;
+	desiredGrade: number | FractionInterface;
+	courseItems: CourseItemInterface[];
+	owner: string;
 }
 
 const Course = dynamoose.model<CourseInterface>('Course', courseSchema);
+
 
 export default Course;
