@@ -1,5 +1,6 @@
 import express from 'express';
 import { create, read, update, del } from '../operators/courseItemOperations';
+import CourseItem from '../models/courseItem';
 
 const cItemRouter = express.Router();
 
@@ -22,13 +23,38 @@ cItemRouter.get('/:id', async (req, res) => {
 	}
 });
 
+// helper function converts string to valid number-esque type
+// note: if string is empty, will return undefined
+const numberify = (str: string) => {
+	const regex = /^(\d+\.?\d*)\/(\d+\.?\d*)$/;
+	const match = str.match(regex);
+	if (match) {
+		return Number(match[1]) / Number(match[2]);
+	} else if (str === '') {
+		return undefined;
+	}
+
+	return Number(str); // Not guranteed to be a number since we don't know what is stored in str
+};
+
 cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			await update(req.body, userID);
+			const body = req.body;
+			const courseItem = new CourseItem({
+				id: body.id,
+				owner: userID,
+				name: body.name,
+				weight: numberify(body.weight),
+				grade: numberify(body.grade),
+				date: body.date,
+				createdAt: body.createdAt,
+				updatedAt: body.updatedAt,
+			});
+			await create(courseItem);
 			console.log('Post Course Item');
-			res.send('Post cItemRouter');
+			res.send('Post cItemRouter: ' + req.body.name);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -37,9 +63,23 @@ cItemRouter.post('/', async (req, res) => {
 
 cItemRouter.put('/', async (req, res) => {
 	try {
-		await create(req.body);
-		console.log('Put Course Item');
-		res.send('Put cItemRouter: ' + req.body.name);
+		const userID = req.header('userID');
+		if (userID) {
+			const body = req.body;
+			const courseItem = new CourseItem({
+				id: body.id,
+				owner: userID,
+				name: body.name,
+				weight: numberify(body.weight),
+				grade: numberify(body.grade),
+				date: body.date,
+				createdAt: body.createdAt,
+				updatedAt: body.updatedAt,
+			});
+			await update(courseItem, userID);
+			console.log('Put Course Item');
+			res.send('Put cItemRouter');
+		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}

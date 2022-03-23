@@ -16,6 +16,5 @@ export const checkUserId = (
 	) => Promise<course> | Promise<courseItem> | Promise<semester>
 ) => async (key: string, userId: string) => {
 	const document = await getDocument(key);
-
 	return document.owner === userId;
 };
