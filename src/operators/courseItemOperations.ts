@@ -18,7 +18,7 @@ export const create = async (courseItem: CourseItemInterface) => {
 export const read = async (key: string, userID: string) => {
 	try {
 		const courseItem = await CourseItem.get(key);
-		if (courseItem && courseItem.owner == userID) {
+		if (courseItem && courseItem.owner === userID) {
 			return courseItem;
 		} else {
 			throw new Error();

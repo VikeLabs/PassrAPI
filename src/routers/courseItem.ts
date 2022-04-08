@@ -26,12 +26,14 @@ cItemRouter.get('/:id', async (req, res) => {
 // helper function converts string to valid number-esque type
 // note: if string is empty, will return undefined
 const numberify = (str: string) => {
+	if (str === undefined || str === '') {
+		return undefined;
+	}
+
 	const regex = /^(\d+\.?\d*)\/(\d+\.?\d*)$/;
 	const match = str.match(regex);
 	if (match) {
 		return Number(match[1]) / Number(match[2]);
-	} else if (str === '') {
-		return undefined;
 	}
 
 	return Number(str); // Not guranteed to be a number since we don't know what is stored in str
@@ -66,15 +68,17 @@ cItemRouter.put('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
+			console.log('updating course item with id ' + body.id);
+			const name = body.name;
+			const weight = numberify(body.weight);
+			const grade = numberify(body.grade);
+			const date = body.date;
 			const courseItem = new CourseItem({
 				id: body.id,
-				owner: userID,
-				name: body.name,
-				weight: numberify(body.weight),
-				grade: numberify(body.grade),
-				date: body.date,
-				createdAt: body.createdAt,
-				updatedAt: body.updatedAt,
+				...(name ? { name } : {}),
+				...(weight ? { weight } : {}),
+				...(grade ? { grade } : {}),
+				...(date ? { date } : {}),
 			});
 			await update(courseItem, userID);
 			console.log('Put Course Item');
