@@ -1,10 +1,13 @@
 import Semester, { SemesterInterface } from '../models/semester';
+import { v4 as uuidv4 } from 'uuid';
 import { checkUserId } from './index';
 
 const checkSemesterUser = checkUserId(Semester.get);
 
 export const create = async (semester: SemesterInterface) => {
 	try {
+		const hashKey = uuidv4();
+		semester.id = hashKey;
 		await Semester.create(semester);
 	} catch (err) {
 		console.log(err);

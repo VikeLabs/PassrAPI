@@ -1,5 +1,6 @@
 import express from 'express';
 import { create, read, update, del } from '../operators/semesterOperations';
+import Semester from '../models/semester';
 
 const semesterRouter = express.Router();
 
@@ -24,9 +25,17 @@ semesterRouter.get('/:id', async (req, res) => {
 
 semesterRouter.post('/', async (req, res) => {
 	try {
-		await create(req.body);
-		console.log('Put Semester');
-		res.send(req.body.name + ' created successfully');
+		const userID = req.header('userID');
+		if (userID) {
+			const semester = new Semester({
+				owner: userID,
+				name: req.body.name,
+			});
+			console.log('model built');
+			await create(semester);
+			console.log('Put Semester');
+			res.send(req.body.name + ' created successfully');
+		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -36,7 +45,13 @@ semesterRouter.put('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			await update(req.body, userID);
+			const body = req.body;
+			const semester = new Semester({
+				id: body.id,
+				owner: userID,
+				name: body.name,
+			});
+			await update(semester, userID);
 			console.log('Post Semester');
 			res.send('Semester updated');
 		}
