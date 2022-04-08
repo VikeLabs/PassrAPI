@@ -34,7 +34,7 @@ userRouter.put('/', async (req, res) => {
 		if (!userID) {
 			throw new Error('ERROR: No user ID found.');
 		}
-		await update(req.body);
+		await update(req.body, userID);
 		res.send('User posted');
 	} catch (e) {
 		res.status(404).send(userError);

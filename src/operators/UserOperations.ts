@@ -1,6 +1,14 @@
 import User, { UserInterface } from '../models/user';
+import { v4 as uuidv4 } from 'uuid';
 
-export const create = async (user: UserInterface) => User.create(user);
+export const create = async (user: UserInterface) => {
+	try {
+		user.id = uuidv4();
+		User.create(user);
+	} catch {
+		throw new Error();
+	}
+};
 
 export const read = async (key: string) => {
 	try {
@@ -13,17 +21,20 @@ export const read = async (key: string) => {
 		throw new Error();
 	}
 };
-export const update = async (data: Partial<UserInterface>) => {
+
+export const update = async (data: Partial<UserInterface>, userID: string) => {
 	try {
 		if (!data.id) {
 			throw new Error('ERROR: No user ID');
 		}
 		const key = data.id;
-		const user = await User.get(key);
-		if (!user) {
-			throw new Error('ERROR: User does not exist.');
+		if (key === userID) {
+			const user = await User.get(key);
+			if (!user) {
+				throw new Error('ERROR: User does not exist.');
+			}
+			return User.update(data);
 		}
-		return User.update(data);
 	} catch {
 		throw new Error();
 	}
