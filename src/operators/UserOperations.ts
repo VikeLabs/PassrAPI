@@ -1,30 +1,37 @@
 import User, { UserInterface } from '../models/user';
+import { v4 as uuidv4 } from 'uuid';
 
-export const create = async (user: UserInterface) => User.create(user);
+export const create = async (user: UserInterface) => {
+	user.id = uuidv4();
+	User.create(user);
+};
 
 export const read = async (key: string) => {
 	const user = await User.get(key);
 	if (!user) {
-		throw 'ERROR: Could not read user.';
+		throw new Error('ERROR: Could not read user.');
 	}
 	return user;
 };
-export const update = async (data: Partial<UserInterface>) => {
+
+export const update = async (data: Partial<UserInterface>, userID: string) => {
 	if (!data.id) {
-		throw 'ERROR: No user ID';
+		throw new Error('ERROR: No user ID');
 	}
 	const key = data.id;
-	const user = await User.get(key);
-	if (!user) {
-		throw 'ERROR: User does not exist.';
+	if (key === userID) {
+		const user = await User.get(key);
+		if (!user) {
+			throw new Error('ERROR: User does not exist.');
+		}
+		return User.update(data);
 	}
-	return User.update(data);
 };
 
 export const del = async (key: string) => {
 	const userkey = await User.get(key);
 	if (!userkey) {
-		throw 'ERROR: Could not delete user.';
+		throw new Error('ERROR: Could not delete user.');
 	}
 	return User.delete(key);
 };

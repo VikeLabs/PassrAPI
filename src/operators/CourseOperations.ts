@@ -10,9 +10,8 @@ export const create = async (course: CourseInterface) => {
 		course.id = hashKey;
 
 		await Course.create(course);
-
 	} catch (err) {
-		throw new Error('Failed to create course with id' + course.id);
+		throw new Error('Failed to create course with id ' + course.id);
 	}
 };
 
@@ -20,19 +19,19 @@ export const read = async (key: string, userID: string) => {
 	try {
 		const course = await Course.get(key);
 
-		if (course && course.owner == userID) {
+		if (course && course.owner === userID) {
 			return course;
 		} else {
 			throw new Error();
 		}
-
 	} catch (err) {
-		throw new Error('ERROR - could not read course with key ' + key);
+		throw new Error('ERROR: could not read course with key ' + key);
 	}
-
 };
 
-export const update = async (data: Partial<CourseInterface>, userID: string
+export const update = async (
+	data: Partial<CourseInterface>,
+	userID: string
 ) => {
 	try {
 		if (data.id) {
@@ -45,9 +44,8 @@ export const update = async (data: Partial<CourseInterface>, userID: string
 				throw new Error();
 			}
 		}
-
 	} catch (err) {
-		throw new Error("ERROR - userID doesn't match");
+		throw new Error("ERROR: userID doesn't match");
 	}
 };
 
@@ -60,8 +58,7 @@ export const del = async (key: string, userID: string) => {
 		} else {
 			throw new Error();
 		}
-		
 	} catch (err) {
-		throw new Error('ERROR - could not delete course with key ' + key);
+		throw new Error('ERROR: could not delete course with key ' + key);
 	}
 };
