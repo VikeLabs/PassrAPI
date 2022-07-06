@@ -20,8 +20,8 @@ userRouter.get('/', async (req, res) => {
 
 userRouter.post('/', async (req, res) => {
 	try {
-		await create(req.body);
-		res.send('User Created');
+		const created = await create(req.body);
+		res.json(created);
 	} catch (e) {
 		res.status(404).send(userError);
 		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
@@ -34,8 +34,8 @@ userRouter.put('/', async (req, res) => {
 		if (!userID) {
 			throw new Error('ERROR: No user ID found.');
 		}
-		await update(req.body, userID);
-		res.send('User posted');
+		const updated = await update(req.body, userID);
+		res.json(updated);
 	} catch (e) {
 		res.status(404).send(userError);
 		console.error(`Error: ${e} - Status Code ${res.statusCode}`);

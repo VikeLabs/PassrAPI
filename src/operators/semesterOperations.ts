@@ -8,9 +8,8 @@ export const create = async (semester: SemesterInterface) => {
 	try {
 		const hashKey = uuidv4();
 		semester.id = hashKey;
-		await Semester.create(semester);
+		return await Semester.create(semester);
 	} catch (err) {
-		console.log(err);
 		throw new Error('ERROR: semester not created');
 	}
 };
@@ -29,16 +28,15 @@ export const update = async (
 	data: Partial<SemesterInterface>,
 	userID: string
 ) => {
-	let updated = false;
-	if (data.id) {
-		const key = data.id;
-		const isOwner = await checkSemesterUser(key, userID);
-		const semester = await Semester.get(key);
-		if (isOwner && semester && (await Semester.update(data))) {
-			updated = true;
+	try {
+		if (data.id) {
+			const key = data.id;
+			const isOwner = await checkSemesterUser(key, userID);
+			if (isOwner) {
+				return await Semester.update(data);
+			}
 		}
-	}
-	if (!updated) {
+	} catch (err) {
 		throw new Error('ERROR: semester not updated');
 	}
 };
@@ -49,12 +47,10 @@ export const del = async (key: string, userID: string) => {
 		const semester = await Semester.get(key);
 		if (isOwner && semester) {
 			await Semester.delete(key);
-			console.log('Deletion of document with id ' + key + ' successful.');
 		} else {
 			throw new Error('UserID invalid.');
 		}
 	} catch (err) {
-		console.log(err);
 		throw new Error('ERROR: semester not deleted');
 	}
 };

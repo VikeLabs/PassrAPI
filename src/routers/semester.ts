@@ -8,7 +8,6 @@ const ERROR_RESPONSE = 'Semester not found.';
 
 semesterRouter.get('/:id', async (req, res) => {
 	try {
-		console.log('Get Semester');
 		const userID = req.header('userID');
 		if (userID) {
 			const semester = await read(req.params.id, userID);
@@ -30,11 +29,10 @@ semesterRouter.post('/', async (req, res) => {
 			const semester = new Semester({
 				owner: userID,
 				name: req.body.name,
+				courseItems: [],
 			});
-			console.log('model built');
-			await create(semester);
-			console.log('Put Semester');
-			res.send(req.body.name + ' created successfully');
+			const created = await create(semester);
+			res.json(created);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -51,9 +49,8 @@ semesterRouter.put('/', async (req, res) => {
 				owner: userID,
 				name: body.name,
 			});
-			await update(semester, userID);
-			console.log('Post Semester');
-			res.send('Semester updated');
+			const updated = await update(semester, userID);
+			res.json(updated);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -65,7 +62,6 @@ semesterRouter.delete('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			await del(req.body.id, userID);
-			console.log('Delete Semester');
 			res.send('Semester deleted');
 		}
 	} catch (err) {

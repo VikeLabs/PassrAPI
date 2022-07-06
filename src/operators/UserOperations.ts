@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const create = async (user: UserInterface) => {
 	user.id = uuidv4();
-	User.create(user);
+	return await User.create(user);
 };
 
 export const read = async (key: string) => {

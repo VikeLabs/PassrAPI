@@ -9,7 +9,7 @@ export const create = async (course: CourseInterface) => {
 		const hashKey = uuidv4();
 		course.id = hashKey;
 
-		await Course.create(course);
+		return await Course.create(course);
 	} catch (err) {
 		throw new Error('Failed to create course with id ' + course.id);
 	}
@@ -39,7 +39,7 @@ export const update = async (
 			const isOwner = await checkCourseUser(key, userID);
 
 			if (isOwner) {
-				await Course.update(data);
+				return await Course.update(data);
 			} else {
 				throw new Error();
 			}
