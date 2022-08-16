@@ -8,7 +8,7 @@ export const create = async (courseItem: CourseItemInterface) => {
 	try {
 		const hashKey = uuidv4();
 		courseItem.id = hashKey;
-		return await CourseItem.create(courseItem);
+		return CourseItem.create(courseItem);
 	} catch {
 		throw new Error('ERROR: could not create courseItem');
 	}
@@ -37,7 +37,7 @@ export const update = async (
 			const key = data.id;
 			const isOwner = await checkCourseItemUser(key, userID);
 			if (isOwner) {
-				return await CourseItem.update(data);
+				return CourseItem.update(data);
 			} else {
 				throw new Error("ERROR: userID doesn't match");
 			}

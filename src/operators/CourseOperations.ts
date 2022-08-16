@@ -9,7 +9,7 @@ export const create = async (course: CourseInterface) => {
 		const hashKey = uuidv4();
 		course.id = hashKey;
 
-		return await Course.create(course);
+		return Course.create(course);
 	} catch (err) {
 		throw new Error('Failed to create course with id ' + course.id);
 	}

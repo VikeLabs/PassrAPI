@@ -8,7 +8,7 @@ export const create = async (semester: SemesterInterface) => {
 	try {
 		const hashKey = uuidv4();
 		semester.id = hashKey;
-		return await Semester.create(semester);
+		return Semester.create(semester);
 	} catch (err) {
 		throw new Error('ERROR: semester not created');
 	}
@@ -33,7 +33,7 @@ export const update = async (
 			const key = data.id;
 			const isOwner = await checkSemesterUser(key, userID);
 			if (isOwner) {
-				return await Semester.update(data);
+				return Semester.update(data);
 			}
 		}
 	} catch (err) {
