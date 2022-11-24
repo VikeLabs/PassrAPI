@@ -6,9 +6,11 @@ export const fraction = new dynamoose.Schema({
 	denominator: Number,
 });
 
-interface FractionInterface extends Document {
+export interface FractionInterface extends Document {
 	numerator: number;
 	denominator: number;
 }
 
-export default FractionInterface;
+const Fraction = dynamoose.model<FractionInterface>('Course', fraction);
+
+export default Fraction;
