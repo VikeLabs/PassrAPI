@@ -36,9 +36,8 @@ courseRouter.post('/', async (req, res) => {
 				owner: userID,
 				name: req.body.name,
 			});
-			await create(course);
-			console.log('Post Course');
-			res.send('Post courseRouter: ' + req.body.name);
+			const created = await create(course);
+			res.json(created);
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
@@ -53,9 +52,8 @@ courseRouter.put('/', async (req, res) => {
 				id: req.body.id,
 				name: req.body.name,
 			});
-			await update(course, userID);
-			console.log('Put Course');
-			res.send('Put courseRouter');
+			const updated = await update(course, userID);
+			res.json(updated);
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
@@ -68,7 +66,6 @@ courseRouter.delete('/', async (req, res) => {
 
 		if (userID) {
 			await del(req.body.id, userID);
-			console.log('Delete Course');
 			res.send('Delete courseRouter');
 		}
 	} catch (err) {

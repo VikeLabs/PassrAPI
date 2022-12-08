@@ -8,12 +8,10 @@ const ERROR_RESPONSE = 'Course item not found.';
 
 cItemRouter.get('/:id', async (req, res) => {
 	try {
-		console.log('Get course Item');
 		const id = req.params.id;
 		const userID = req.header('userID');
 		if (id && userID) {
 			const courseItem = await read(id, userID);
-			console.log(courseItem);
 			res.send(courseItem);
 		} else {
 			throw 'ERROR - id undefined';
@@ -54,9 +52,8 @@ cItemRouter.post('/', async (req, res) => {
 				createdAt: body.createdAt,
 				updatedAt: body.updatedAt,
 			});
-			await create(courseItem);
-			console.log('Post Course Item');
-			res.send('Post cItemRouter: ' + req.body.name);
+			const created = await create(courseItem);
+			res.json(created);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -68,7 +65,6 @@ cItemRouter.put('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
-			console.log('updating course item with id ' + body.id);
 			const name = body.name;
 			const weight = numberify(body.weight);
 			const grade = numberify(body.grade);
@@ -80,9 +76,8 @@ cItemRouter.put('/', async (req, res) => {
 				...(grade ? { grade } : {}),
 				...(date ? { date } : {}),
 			});
-			await update(courseItem, userID);
-			console.log('Put Course Item');
-			res.send('Put cItemRouter');
+			const updated = await update(courseItem, userID);
+			res.json(updated);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -94,7 +89,6 @@ cItemRouter.delete('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			await del(req.body.id, userID);
-			console.log('Delete Course Item');
 			res.send('Delete cItemRouter');
 		}
 	} catch (err) {
