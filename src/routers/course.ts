@@ -35,6 +35,7 @@ courseRouter.post('/', async (req, res) => {
 			const course = new Course({
 				owner: userID,
 				name: req.body.name,
+				desiredGrade: req.body.desiredGrade,
 			});
 			const created = await create(course);
 			res.json(created);
@@ -48,9 +49,15 @@ courseRouter.put('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
+			const body = req.body;
+			const name = body.name;
+			const desiredGrade = body.desiredGrade;
+			const courseItems = body.coursItems;
 			const course = new Course({
-				id: req.body.id,
-				name: req.body.name,
+				id: body.id,
+				...(name ? { name } : {}),
+				...(desiredGrade ? { desiredGrade } : {}),
+				...(courseItems ? { courseItems } : {}),
 			});
 			const updated = await update(course, userID);
 			res.json(updated);
