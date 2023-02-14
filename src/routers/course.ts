@@ -34,9 +34,15 @@ courseRouter.post('/', async (req, res) => {
 		if (userID) {
 			const course = new Course({
 				owner: userID,
-				name: req.body.name,
+				name: req.body.course.name,
 			});
-			const created = await create(course);
+
+			const coursePackage = {
+				course: course,
+				parent: req.body.parent,
+			};
+
+			const created = await create(coursePackage);
 			res.json(created);
 		}
 	} catch (err) {

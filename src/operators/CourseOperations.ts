@@ -1,17 +1,50 @@
 import Course, { CourseInterface } from '../models/course';
+import Semester from '../models/semester';
 import { v4 as uuidv4 } from 'uuid';
 import { checkUserId } from './index';
 
 const checkCourseUser = checkUserId(Course.get);
 
-export const create = async (course: CourseInterface) => {
+export const create = async (coursePackage: {
+	course: CourseInterface;
+	parent: string; // semester ID
+}) => {
 	try {
+		const course = coursePackage.course;
 		const hashKey = uuidv4();
 		course.id = hashKey;
 
-		return Course.create(course);
+		// console.log('course:', course);
+		// console.log('parent:', coursePackage.parent);
+
+		// either succeeds or fails both operations
+		// const transaction = await dynamoose.transaction([
+		// 	Course.transaction
+		// 		.create(course)
+		// 		.then((course) =>
+		// 			Semester.transaction.update(
+		// 				{ id: coursePackage.parent },
+		// 				{ $ADD: { courses: course } }
+		// 			)
+		// 		),
+		// ]);
+
+		const createdCourse = await Course.create(course);
+
+		await Semester.update(
+			{ id: coursePackage.parent },
+			/* Argument of type '{ $ADD: { courses: CourseInterface[]; }; }'
+			   is not assignable to parameter of type 'Partial<SemesterInterface>'.
+			*/
+			{ $ADD: { courses: [createdCourse] } },
+			(error, semester) => {
+				error ? console.error(error) : console.log(semester);
+			}
+		);
+
+		return createdCourse;
 	} catch (err) {
-		throw new Error('Failed to create course with id ' + course.id);
+		throw new Error('Failed to create course');
 	}
 };
 

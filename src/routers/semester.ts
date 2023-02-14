@@ -1,6 +1,7 @@
 import express from 'express';
 import { create, read, update, del } from '../operators/semesterOperations';
 import Semester from '../models/semester';
+import { CourseInterface } from '../models/course';
 
 const semesterRouter = express.Router();
 
@@ -26,15 +27,19 @@ semesterRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
+			const courses = new Set<CourseInterface>();
 			const semester = new Semester({
 				owner: userID,
 				name: req.body.name,
-				courseItems: [],
+				courses: courses,
 			});
+			console.log('creating semester');
 			const created = await create(semester);
+			console.log('semester created', created);
 			res.json(created);
 		}
 	} catch (err) {
+		console.error(err); // TODO: rm after testing
 		res.status(404).send(ERROR_RESPONSE);
 	}
 });
