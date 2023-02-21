@@ -1,37 +1,36 @@
-import User, { UserInterface } from '../models/user';
+import { transaction } from 'dynamoose';
 import { v4 as uuidv4 } from 'uuid';
+import { User, UserModel } from '../models/user';
+import { transactDelete as semesterTransactDelete } from './semesterOperations';
 
-export const create = async (user: UserInterface) => {
-	user.id = uuidv4();
-	return User.create(user);
+// Create a new user
+export const create = async (userId: string): Promise<User> => {
+	return UserModel.create({
+		id: userId,
+	});
 };
 
-export const read = async (key: string) => {
-	const user = await User.get(key);
-	if (!user) {
-		throw new Error('ERROR: Could not read user.');
-	}
-	return user;
+// Read a user by ID
+export const read = async (userId: string): Promise<User | null> => {
+	return UserModel.get({ id: userId });
 };
 
-export const update = async (data: Partial<UserInterface>, userID: string) => {
-	if (!data.id) {
-		throw new Error('ERROR: No user ID');
-	}
-	const key = data.id;
-	if (key === userID) {
-		const user = await User.get(key);
-		if (!user) {
-			throw new Error('ERROR: User does not exist.');
-		}
-		return User.update(data);
-	}
+// Update a user by ID
+export const update = async (
+	userId: string,
+	userData: Partial<User>
+): Promise<User> => {
+	delete userData.id; // disallow updating the ID
+	return UserModel.update({ id: userId }, userData);
 };
 
-export const del = async (key: string) => {
-	const userkey = await User.get(key);
-	if (!userkey) {
-		throw new Error('ERROR: Could not delete user.');
-	}
-	return User.delete(key);
+// Delete a user by ID
+export const delete = async (userId: string): Promise<void> => {
+	const user = await UserModel.get({ id: userId });
+	if(!user) throw new Error(`User with ID ${userId} not found`);
+	const semesters = Array.from(user.semesters);
+	return transaction([
+		UserModel.transaction.delete({ id: userId }),
+		...semesters.map((semesterId) => semesterTransactDelete(semesterId, userId)).flat(),
+	])
 };

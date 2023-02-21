@@ -2,6 +2,7 @@ import Course, { CourseInterface } from '../models/course';
 import Semester from '../models/semester';
 import { v4 as uuidv4 } from 'uuid';
 import { checkUserId } from './index';
+import dynamoose from 'dynamoose';
 
 const checkCourseUser = checkUserId(Course.get);
 
@@ -18,31 +19,54 @@ export const create = async (coursePackage: {
 		// console.log('parent:', coursePackage.parent);
 
 		// either succeeds or fails both operations
-		// const transaction = await dynamoose.transaction([
-		// 	Course.transaction
-		// 		.create(course)
-		// 		.then((course) =>
-		// 			Semester.transaction.update(
-		// 				{ id: coursePackage.parent },
-		// 				{ $ADD: { courses: course } }
-		// 			)
-		// 		),
-		// ]);
+		const transaction = await dynamoose.transaction([
+			Course.transaction.create(course).then((course) =>
+				Semester.transaction
+					.update(
+						{ id: coursePackage.parent },
+						{ $ADD: { courses: course } },
+						{
+							condition: new dynamoose.Condition(
+								'courses'
+							).exists(),
+						}
+					)
+					.catch((addErr) =>
+						Semester.transaction
+							.update(
+								{ id: coursePackage.parent },
+								{ $SET: { courses: [course] } },
+								{
+									condition: new dynamoose.Condition(
+										'courses'
+									)
+										.not()
+										.exists(),
+								}
+							)
+							.catch((setErr) => {
+								throw { addErr, setErr };
+							})
+					)
+			),
+		]);
 
-		const createdCourse = await Course.create(course);
+		console.log(transaction);
 
-		await Semester.update(
-			{ id: coursePackage.parent },
-			/* Argument of type '{ $ADD: { courses: CourseInterface[]; }; }'
-			   is not assignable to parameter of type 'Partial<SemesterInterface>'.
-			*/
-			{ $ADD: { courses: [createdCourse] } },
-			(error, semester) => {
-				error ? console.error(error) : console.log(semester);
-			}
-		);
+		// const createdCourse = await Course.create(course);
 
-		return createdCourse;
+		// await Semester.update(
+		// 	{ id: coursePackage.parent },
+		// 	/* Argument of type '{ $ADD: { courses: CourseInterface[]; }; }'
+		// 	   is not assignable to parameter of type 'Partial<SemesterInterface>'.
+		// 	*/
+		// 	{ $ADD: { courses: [createdCourse] } },
+		// 	(error, semester) => {
+		// 		error ? console.error(error) : console.log(semester);
+		// 	}
+		// );
+
+		// return createdCourse;
 	} catch (err) {
 		throw new Error('Failed to create course');
 	}

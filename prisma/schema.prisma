@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "./schemas/prisma-schema.json"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  semesters Semester[]   @relation("UserSemester")
+  courses   Course[]     @relation("UserCourse")
+  items     CourseItem[] @relation("UserCourseItem")
+}
+
+model Semester {
+  id      Int    @id @default(autoincrement())
+  name    String
+  ownerId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courses Course[] @relation("SemesterCourse")
+  owner   User     @relation("UserSemester", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index(ownerId)
+}
+
+model Course {
+  id           Int    @id @default(autoincrement())
+  name         String
+  desiredGrade Float?
+  ownerId      String
+  semesterId   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items    CourseItem[] @relation("CourseItemCourse")
+  owner    User         @relation("UserCourse", fields: [ownerId], references: [id], onDelete: Cascade)
+  semester Semester     @relation("SemesterCourse", fields: [semesterId], references: [id], onDelete: Cascade)
+
+  @@index(semesterId)
+  @@index(ownerId)
+}
+
+model CourseItem {
+  id          Int       @id @default(autoincrement())
+  name        String
+  weight      Float?
+  numerator   Float?
+  denominator Float?
+  dueDate     DateTime? @map("date")
+  ownerId     String
+  courseId    Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner  User   @relation("UserCourseItem", fields: [ownerId], references: [id], onDelete: Cascade)
+  course Course @relation("CourseItemCourse", fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index(courseId)
+  @@index(ownerId)
+}

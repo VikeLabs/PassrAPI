@@ -1,56 +1,69 @@
-import Semester, { SemesterInterface } from '../models/semester';
+import { Semester, SemesterModel } from '../models/semester';
 import { v4 as uuidv4 } from 'uuid';
 import { checkUserId } from './index';
+import { Condition, transaction } from 'dynamoose';
+import { UserModel } from '../models/user';
 
-const checkSemesterUser = checkUserId(Semester.get);
-
-export const create = async (semester: SemesterInterface) => {
-	try {
-		const hashKey = uuidv4();
-		semester.id = hashKey;
-		return Semester.create(semester);
-	} catch (err) {
-		throw new Error('ERROR: semester not created');
-	}
+export const create = async (semesterData: Semester, userId: string) => {
+	const hashKey = uuidv4();
+	const semester = {
+		id: hashKey,
+		courses: semesterData.courses,
+		name: semesterData.name,
+		owner: userId,
+	};
+	return transaction([
+		SemesterModel.transaction.create(semester),
+		UserModel.transaction.update(
+			{ id: userId },
+			{ $ADD: { semesters: semester.id } }
+		),
+	]);
 };
 
-// NOTE: any reference to key is referring to the hash key, or the `id` parameter in all the models.
-export const read = async (key: string, userID: string) => {
-	const semester = await Semester.get(key);
-	if (semester && semester.owner === userID) {
-		return semester;
-	} else {
-		throw new Error('ERROR: could not read semester');
-	}
+export const read = async (semesterId: string, userId: string) => {
+	const semester = await SemesterModel.get({ id: semesterId });
+	if (!semester) throw new Error(`Semester with ID ${semesterId} not found`);
+	if (semester.owner !== userId)
+		throw new Error(`User ${userId} does not own semester ${semesterId}`);
+	return semester;
 };
 
 export const update = async (
-	data: Partial<SemesterInterface>,
-	userID: string
+	semesterId: string,
+	userId: string,
+	semesterData: Partial<Semester>
 ) => {
-	try {
-		if (data.id) {
-			const key = data.id;
-			const isOwner = await checkSemesterUser(key, userID);
-			if (isOwner) {
-				return Semester.update(data);
-			}
-		}
-	} catch (err) {
-		throw new Error('ERROR: semester not updated');
-	}
+	delete semesterData.id;
+	delete semesterData.owner;
+
+	return SemesterModel.update({ id: semesterId }, semesterData, {
+		condition: new Condition('owner').eq(userId),
+	});
 };
 
-export const del = async (key: string, userID: string) => {
-	try {
-		const isOwner = await checkSemesterUser(key, userID);
-		const semester = await Semester.get(key);
-		if (isOwner && semester) {
-			await Semester.delete(key);
-		} else {
-			throw new Error('UserID invalid.');
-		}
-	} catch (err) {
-		throw new Error('ERROR: semester not deleted');
+
+export const transactDelete = async (semesterId: string, userId: string) => {
+	const semester = await SemesterModel.get({ id: semesterId });
+	if (!semester) throw new Error(`Semester with ID ${semesterId} not found`);
+	if (semester.owner !== userId) {
+		throw new Error(`User ${userId} does not own semester ${semesterId}`);
 	}
+
+	const courses = Array.from(semester.courses);
+
+	return [
+		SemesterModel.transaction.delete(
+			{ id: semesterId },
+			{
+				condition: new Condition('owner').eq(userId),
+			}
+		),
+		...courses.map((courseId) => courseTransactDelete(courseId, userId)),
+	];
 };
+
+export const delete = async (semesterId: string, userId: string) => {
+	const transact = await transactDelete(semesterId, userId);
+	return transaction(...transact);
+}
