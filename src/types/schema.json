@@ -1,0 +1,607 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Passr API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    },
+    {
+      "url": "https://api.passr.ca"
+    },
+    {
+      "url": "https://dev.api.passr.ca/"
+    }
+  ],
+  "components": {
+    "responses": {
+      "DeleteSuccess": {
+        "description": "Delete success"
+      },
+      "NotFound": {
+        "description": "Not found"
+      }
+    },
+    "schemas": {
+      "UserRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The user's id"
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "The user's creation date"
+          },
+          "updatedAt": {
+            "type": "number",
+            "description": "The user's last update date"
+          }
+        },
+        "required": ["id", "createdAt", "updatedAt"]
+      },
+      "SemesterCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The semester's name"
+          }
+        },
+        "required": ["name"]
+      },
+      "SemesterRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The semester's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "The semester's name"
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "The semester's creation date"
+          },
+          "updatedAt": {
+            "type": "number",
+            "description": "The semester's last update date"
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "SemesterUpdate": {
+        "$ref": "#/components/schemas/SemesterCreate"
+      },
+      "CourseCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The course's name"
+          },
+          "desiredGrade": {
+            "type": "number",
+            "description": "The course's desired grade"
+          },
+          "semesterId": {
+            "type": "string",
+            "description": "The course's semester's id"
+          }
+        },
+        "required": ["name", "semesterId"]
+      },
+      "CourseRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The course's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "The course's name"
+          },
+          "desiredGrade": {
+            "type": "number",
+            "description": "The course's desired grade"
+          },
+          "semesterId": {
+            "type": "string",
+            "description": "The course's semester's id"
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "The course's creation date"
+          },
+          "updatedAt": {
+            "type": "number",
+            "description": "The course's last update date"
+          }
+        },
+        "required": ["id", "name", "semesterId", "createdAt", "updatedAt"]
+      },
+      "CourseUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The course's name"
+          },
+          "desiredGrade": {
+            "type": "number",
+            "description": "The course's desired grade"
+          }
+        }
+      },
+      "CourseItemCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The course item's name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "The course item's weight"
+          },
+          "numerator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "denominator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "dueDate": {
+            "type": "number",
+            "description": "The course item's due date"
+          },
+          "courseId": {
+            "type": "string",
+            "description": "The course item's course's id"
+          }
+        },
+        "required": ["name", "courseId"]
+      },
+      "CourseItemRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The course item's id"
+          },
+          "name": {
+            "type": "string",
+            "description": "The course item's name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "The course item's weight"
+          },
+          "numerator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "denominator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "dueDate": {
+            "type": "number",
+            "description": "The course item's due date"
+          },
+          "courseId": {
+            "type": "string",
+            "description": "The course item's course's id"
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "The course item's creation date"
+          },
+          "updatedAt": {
+            "type": "number",
+            "description": "The course item's last update date"
+          }
+        },
+        "required": ["id", "name", "courseId", "createdAt", "updatedAt"]
+      },
+      "CourseItemUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The course item's name"
+          },
+          "weight": {
+            "type": "number",
+            "description": "The course item's weight"
+          },
+          "numerator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "denominator": {
+            "type": "number",
+            "description": "The course item's grade"
+          },
+          "dueDate": {
+            "type": "number",
+            "description": "The course item's due date"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The id of the resource",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create a new user",
+        "operationId": "createUser",
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "tags": ["User"],
+        "summary": "Get a user",
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete a user",
+        "operationId": "deleteUser",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteSuccess"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/semester": {
+      "post": {
+        "tags": ["Semester"],
+        "summary": "Create a new semester",
+        "operationId": "createSemester",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SemesterCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Semester created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SemesterRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/semester/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "tags": ["Semester"],
+        "summary": "Get a semester",
+        "operationId": "getSemester",
+        "responses": {
+          "200": {
+            "description": "Semester found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SemesterRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Semester"],
+        "summary": "Update a semester",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SemesterUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Semester updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SemesterRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Semester"],
+        "summary": "Delete a semester",
+        "operationId": "deleteSemester",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteSuccess"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/course": {
+      "post": {
+        "tags": ["Course"],
+        "summary": "Create a new course",
+        "operationId": "createCourse",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Course created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/course/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "tags": ["Course"],
+        "summary": "Get a course",
+        "operationId": "getCourse",
+        "responses": {
+          "200": {
+            "description": "Course found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Course"],
+        "summary": "Update a course",
+        "operationId": "updateCourse",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Course"],
+        "summary": "Delete a course",
+        "operationId": "deleteCourse",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteSuccess"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/courseItem": {
+      "post": {
+        "tags": ["CourseItem"],
+        "summary": "Create a new course item",
+        "operationId": "createCourseItem",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseItemCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Course item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseItemRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/courseItem/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "get": {
+        "tags": ["CourseItem"],
+        "summary": "Get a course item",
+        "operationId": "getCourseItem",
+        "responses": {
+          "200": {
+            "description": "Course item found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseItemRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": ["CourseItem"],
+        "summary": "Update a course item",
+        "operationId": "updateCourseItem",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseItemUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseItemRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CourseItem"],
+        "summary": "Delete a course item",
+        "operationId": "deleteCourseItem",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DeleteSuccess"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  }
+}
