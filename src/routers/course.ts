@@ -1,8 +1,10 @@
 import express from 'express';
+import Ajv from 'ajv';
 import Course from '../models/course';
-import { create, read, update, del } from '../operators/CourseOperations';
+import schema from '../types/schema.json';
 
 const courseRouter = express.Router();
+const ajv = new Ajv({ removeAdditional: true });
 
 courseRouter.get('/:id', async (req, res) => {
 	try {
@@ -10,16 +12,8 @@ courseRouter.get('/:id', async (req, res) => {
 		const userID = req.header('userID');
 
 		if (id && userID) {
-			const course = await read(id, userID);
-			if (course) {
-				const resData = {
-					...course,
-					courseItems: Array.from(course.courseItems || []),
-				};
-				res.send(resData);
-			} else {
-				throw 'ERROR - course undefined';
-			}
+			// TODO: call db operation
+			res.status(200); // + .json(course)
 		} else {
 			throw 'ERROR - id undefined';
 		}
@@ -32,41 +26,52 @@ courseRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			const course = new Course({
-				owner: userID,
-				name: req.body.name,
-			});
-			const created = await create(course);
-			res.json(created);
+			const body = req.body;
+			const checkPost = ajv.compile(
+				schema.components.schemas.CourseCreate
+			);
+
+			if (checkPost(body)) throw Error('body invalid');
+
+			const course = new Course({ ownerId: userID, ...body });
+
+			console.log(course); // TODO: call db operation
+			res.status(201); // + .json(created)
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
 	}
 });
 
-courseRouter.put('/', async (req, res) => {
+courseRouter.put('/:id', async (req, res) => {
 	try {
+		const id = req.params.id;
 		const userID = req.header('userID');
-		if (userID) {
-			const course = new Course({
-				id: req.body.id,
-				name: req.body.name,
-			});
-			const updated = await update(course, userID);
-			res.json(updated);
+		if (id && userID) {
+			const body = req.body;
+			const checkPut = ajv.compile(
+				schema.components.schemas.CourseUpdate
+			);
+
+			if (checkPut(body)) throw Error('body invalid');
+
+			const course = new Course(body);
+
+			console.log(course); // TODO: call db operation
+			res.status(200); // + .json(updated)
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
 	}
 });
 
-courseRouter.delete('/', async (req, res) => {
+courseRouter.delete('/:id', async (req, res) => {
 	try {
+		const id = req.params.id;
 		const userID = req.header('userID');
-
-		if (userID) {
-			await del(req.body.id, userID);
-			res.send('Delete courseRouter');
+		if (id && userID) {
+			// TODO: call db operation
+			res.status(200);
 		}
 	} catch (err) {
 		res.status(404).send('Not found.');
