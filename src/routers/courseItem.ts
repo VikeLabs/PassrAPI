@@ -1,8 +1,10 @@
 import express from 'express';
-import { create, read, update, del } from '../operators/courseItemOperations';
+import Ajv from 'ajv';
 import CourseItem from '../models/courseItem';
+import schema from '../types/schema.json';
 
 const cItemRouter = express.Router();
+const ajv = new Ajv({ removeAdditional: true });
 
 const ERROR_RESPONSE = 'Course item not found.';
 
@@ -11,10 +13,10 @@ cItemRouter.get('/:id', async (req, res) => {
 		const id = req.params.id;
 		const userID = req.header('userID');
 		if (id && userID) {
-			const courseItem = await read(id, userID);
-			res.send(courseItem);
+			// TODO: call db operation
+			res.status(200); // + .json(courseItem)
 		} else {
-			throw 'ERROR - id undefined';
+			throw Error('id not found');
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -42,54 +44,51 @@ cItemRouter.post('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
-			const courseItem = new CourseItem({
-				id: body.id,
-				owner: userID,
-				name: body.name,
-				weight: numberify(body.weight),
-				grade: numberify(body.grade),
-				date: body.date,
-				createdAt: body.createdAt,
-				updatedAt: body.updatedAt,
-			});
-			const created = await create(courseItem);
-			res.json(created);
+			const checkPost = ajv.compile(
+				schema.components.schemas.CourseItemCreate
+			);
+
+			if (checkPost(body)) throw Error('body invalid');
+
+			const courseItem = new CourseItem({ ownerId: userID, ...body });
+
+			console.log(courseItem); // TODO: call db operation
+			res.status(201); // + .json(created)
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
-cItemRouter.put('/', async (req, res) => {
+cItemRouter.put('/:id', async (req, res) => {
 	try {
+		const id = req.params.id;
 		const userID = req.header('userID');
-		if (userID) {
+		if (id && userID) {
 			const body = req.body;
-			const name = body.name;
-			const weight = numberify(body.weight);
-			const grade = numberify(body.grade);
-			const date = body.date;
-			const courseItem = new CourseItem({
-				id: body.id,
-				...(name ? { name } : {}),
-				...(weight ? { weight } : {}),
-				...(grade ? { grade } : {}),
-				...(date ? { date } : {}),
-			});
-			const updated = await update(courseItem, userID);
-			res.json(updated);
+			const checkPut = ajv.compile(
+				schema.components.schemas.CourseItemUpdate
+			);
+
+			if (checkPut(body)) throw Error('body invalid');
+
+			const courseItem = new CourseItem(body);
+
+			console.log(courseItem); // TODO: call db operation
+			res.status(200); // + .json(updated)
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
-cItemRouter.delete('/', async (req, res) => {
+cItemRouter.delete('/:id', async (req, res) => {
 	try {
+		const id = req.params.id;
 		const userID = req.header('userID');
-		if (userID) {
-			await del(req.body.id, userID);
-			res.send('Delete cItemRouter');
+		if (id && userID) {
+			// TODO: call db operation
+			res.status(200);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
