@@ -1,50 +1,22 @@
-export interface User {
-	id: string;
-	semesters: Semester[];
-	courses: Course[];
-	items: CourseItem[];
+import { User, Semester, Course, CourseItem } from '@prisma/client';
+export { User, Semester, Course, CourseItem };
+export type UserCreate = Pick<User, 'id'>;
 
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type SemesterCreate = Pick<Semester, 'name' | 'ownerId'>;
 
-export interface Semester {
-	id: number;
-	name: string;
-	courses: Course[];
-	ownerId: number;
-	owner: User;
+export type SemesterUpdate = Partial<Pick<SemesterCreate, 'name'>>;
 
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type CourseCreate = Pick<Course, 'name' | 'semesterId' | 'ownerId'> &
+  Partial<Pick<Course, 'desiredGrade'>>;
 
-export interface Course {
-	id: number;
-	name: string;
-	items: CourseItem[];
-	desiredGrade?: number | null;
-	ownerId: number;
-	semesterId: number;
-	owner: User;
-	semester: Semester;
+export type CourseUpdate = Partial<Pick<Course, 'name' | 'desiredGrade'>>;
 
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type CourseItemCreate = Pick<
+  CourseItem,
+  'name' | 'courseId' | 'ownerId'
+> &
+  Partial<Pick<CourseItem, 'weight' | 'numerator' | 'denominator' | 'dueDate'>>;
 
-export interface CourseItem {
-	id: number;
-	name: string;
-	weight?: number | null;
-	numerator?: number;
-	denominator?: number | null;
-	dueDate?: Date;
-	ownerId: number;
-	courseId: number;
-	owner: User;
-	course: Course;
-
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type CourseItemUpdate = Partial<
+  Pick<CourseItem, 'name' | 'weight' | 'numerator' | 'denominator' | 'dueDate'>
+>;
