@@ -31,22 +31,6 @@ userRouter.post('/', async (req, res) => {
 	}
 });
 
-/*
-userRouter.put('/', async (req, res) => {
-	try {
-		const userID = req.header('userID');
-		if (!userID) {
-			throw new Error('ERROR: No user ID found.');
-		}
-		const updated = await update(req.body, userID);
-		res.json(updated);
-	} catch (e) {
-		res.status(404).send(userError);
-		console.error(`Error: ${e} - Status Code ${res.statusCode}`);
-	}
-});
-*/
-
 userRouter.delete('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
