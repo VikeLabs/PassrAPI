@@ -1,76 +1,66 @@
-// CRUD functions for the course item table
+import { get } from 'http';
 import getDb from '../initDB';
-import { CourseItem } from '../models';
+import { CourseItem, CourseItemCreate, CourseItemUpdate } from '../models';
 
-type CreateRequired = 'name';
-type CreateOmitited = 'id' | 'owner' | 'course' | 'courseId' | 'ownerId';
-type CreateData = Pick<CourseItem, CreateRequired> &
-	Partial<Omit<CourseItem, CreateRequired | CreateOmitited>>;
+const db = getDb();
 
-export const createCourseItem = (
-	courseItem: CreateData,
-	userId: string,
-	courseId: number
-) => {
-	const db = getDb();
-	return db.courseItem.create({
-		data: {
-			...courseItem,
-			courseId: undefined,
-			owner: {
-				connect: {
-					id: userId,
-				},
-			},
-			course: {
-				connect: {
-					id: courseId,
-				},
-			},
-		},
-	});
+export const createCourseItem = async (
+  courseItem: CourseItemCreate
+): Promise<CourseItem> => {
+  return db.courseItem.create({ data: courseItem });
 };
 
-export const getCourseItem = (id: number, userId: string) => {
-	const db = getDb();
-
-	return db.courseItem.findFirst({
-		where: {
-			id,
-			ownerId: userId,
-		},
-	});
+export const getCourseItemById = async (
+  id: number,
+  ownerId: string
+): Promise<CourseItem> => {
+  try {
+    const courseItem = await db.courseItem.findFirst({
+      where: { id, ownerId },
+    });
+    if (!courseItem) {
+      throw new Error('CourseItem not found');
+    }
+    return courseItem;
+  } catch (e) {
+    throw new Error('CourseItem not found');
+  }
 };
 
-type UpdateRequired = 'id';
-type UpdateOmitted = 'owner' | 'course' | 'courseId' | 'ownerId';
-type UpdateData = Pick<CourseItem, UpdateRequired> &
-	Partial<Omit<CourseItem, UpdateRequired | UpdateOmitted>>;
+export const getCourseItemsByOwnerId = async (
+  ownerId: string
+): Promise<CourseItem[]> => {
+  try {
+    const courseItems = await db.courseItem.findMany({
+      where: { ownerId },
+    });
+    if (!courseItems) {
+      throw new Error('CourseItems not found');
+    }
+    return courseItems;
+  } catch (e) {
+    throw new Error('CourseItems not found');
+  }
+};
+
 export const updateCourseItem = async (
-	courseItem: UpdateData,
-	userId: string
-) => {
-	const db = getDb();
-
-	return db.courseItem.updateMany({
-		where: {
-			id: courseItem.id,
-			ownerId: userId,
-		},
-		data: {
-			...courseItem,
-			id: undefined,
-		},
-	});
+  id: number,
+  ownerId: string,
+  data: CourseItemUpdate
+): Promise<CourseItem> => {
+  try {
+    const courseItem = await getCourseItemById(id, ownerId);
+    return db.courseItem.update({ where: { id: courseItem.id }, data });
+  } catch (e) {
+    throw new Error('CourseItem not found');
+  }
 };
 
-export const deleteCourseItem = async (id: number, userId: string) => {
-	const db = getDb();
-
-	return db.courseItem.deleteMany({
-		where: {
-			id,
-			ownerId: userId,
-		},
-	});
+export const deleteCourseItem = async (id: number, ownerId: string): Promise<CourseItem> => {
+  try {
+    const courseItem = await getCourseItemById(id, ownerId);
+    return db.courseItem.delete({ where: { id: courseItem.id } });
+  } catch (e) {
+    throw new Error('CourseItem not found');
+  }
 };

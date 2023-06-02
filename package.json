@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/Vikelabs/PassrAPI#readme",
 	"dependencies": {
-		"@prisma/client": "^4.10.1",
+		"@prisma/client": "^4.14.0",
 		"@rollup/plugin-commonjs": "^17.1.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.1.1",
