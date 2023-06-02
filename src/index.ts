@@ -12,21 +12,21 @@ const app = express();
 
 app.use(express.json());
 app.use((req, res, next) => {
-	// take user id from header and add to request json
-	const userId = req.header('userID');
+  // take user id from header and add to request json
+  const userId = req.header('userID');
 
-	if (!userId) {
-		// Return a 404 Not Found error if the userID header is missing
-		return res.status(404).json({ error: 'User ID not found' });
-	}
+  if (!userId) {
+    // Return a 404 Not Found error if the userID header is missing
+    return res.status(404).json({ error: 'User ID not found' });
+  }
 
-	req.body.userId = userId;
+  req.body.userId = userId;
 
-	next();
+  next();
 });
 
 app.get('/', (req, res) => {
-	res.send('Successful PassrAPI!');
+  res.send('Successful PassrAPI!');
 });
 
 app.use('/user', userRouter);
@@ -35,16 +35,16 @@ app.use('/course', courseRouter);
 app.use('/courseItem', cItemRouter);
 
 async function main() {
-	const prisma = await getDb();
-	try {
-		app.listen(port, () => {
-			console.log('Running Passr API.');
-		});
-	} catch (err) {
-		console.error(err);
-	} finally {
-		await prisma.$disconnect();
-	}
+  const prisma = getDb();
+  try {
+    app.listen(port, () => {
+      console.log('Running Passr API.');
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 main();

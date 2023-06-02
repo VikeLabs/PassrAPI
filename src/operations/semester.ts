@@ -1,61 +1,72 @@
-import getDb from '../initDB';
-import { Semester } from '../models';
+import { SemesterCreate, SemesterUpdate, Semester } from '../models'; // Replace with the correct import path for your interfaces
+import getDb from '../initDB'; // Replace with the correct import path for your getDb function
 
-type CreateRequired = 'name';
-type CreateOmitted = 'id' | 'owner' | 'ownerId' | 'courses';
-type CreateData = Pick<Semester, CreateRequired> &
-	Partial<Omit<Semester, CreateRequired | CreateOmitted>>;
-export const createSemester = (semester: CreateData, userId: string) => {
-	const db = getDb();
-	return db.semester.create({
-		data: {
-			...semester,
-			owner: {
-				connect: {
-					id: userId,
-				},
-			},
-		},
-	});
-};
+const prisma = getDb();
 
-export const getSemester = (id: number, userId: string) => {
-	const db = getDb();
+export async function createSemester(data: SemesterCreate): Promise<Semester> {
+  return prisma.semester.create({
+    data: {
+      name: data.name,
+      ownerId: data.ownerId,
+    },
+  });
+}
 
-	return db.semester.findFirst({
-		where: {
-			id,
-			ownerId: userId,
-		},
-	});
-};
+export async function getSemesterById(
+  id: number,
+  ownerId: string
+): Promise<Semester> {
+  try {
+    const semester = await prisma.semester.findFirst({
+      where: { id, ownerId },
+    });
+    if (!semester) throw new Error('');
+    return semester;
+  } catch (e) {
+    throw new Error('Semester not found');
+  }
+}
 
-type UpdateRequired = 'id';
-type UpdateOmitted = 'owner' | 'ownerId' | 'courses';
-type UpdateData = Pick<Semester, UpdateRequired> &
-	Partial<Omit<Semester, UpdateRequired | UpdateOmitted>>;
-export const updateSemester = async (semester: UpdateData, userId: string) => {
-	const db = getDb();
+export async function getSemestersByOwnerId(
+  ownerId: string
+): Promise<Semester[]> {
+  try {
+    return prisma.semester.findMany({
+      where: { ownerId },
+    });
+  } catch (e) {
+    throw new Error('Semesters not found');
+  }
+}
 
-	return db.semester.updateMany({
-		where: {
-			id: semester.id,
-			ownerId: userId,
-		},
-		data: {
-			...semester,
-			id: undefined,
-		},
-	});
-};
+export async function updateSemester(
+  id: number,
+  ownerId: string,
+  data: SemesterUpdate
+): Promise<Semester> {
+  try {
+    const semester = await getSemesterById(id, ownerId);
+    return prisma.semester.update({
+      where: { id: semester.id },
+      data: {
+        name: data.name,
+      },
+    });
+  } catch (e) {
+    throw new Error('Semester not found');
+  }
+}
 
-export const deleteSemester = async (id: number, userId: string) => {
-	const db = getDb();
-
-	return db.semester.deleteMany({
-		where: {
-			id,
-			ownerId: userId,
-		},
-	});
-};
+export async function deleteSemester(
+  id: number,
+  ownerId: string
+): Promise<Semester> {
+  try {
+    const semester = await getSemesterById(id, ownerId);
+    return prisma.semester.delete({
+      where: { id: semester.id },
+    });
+  } catch (e) {
+    throw new Error('Semester not found');
+  }
+}

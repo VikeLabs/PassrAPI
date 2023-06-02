@@ -41,7 +41,7 @@ cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
 		if (userID) {
-			const body = req.body.courseItem;
+			const body = req.body;
 			const courseItem = new CourseItem({
 				id: body.id,
 				owner: userID,
