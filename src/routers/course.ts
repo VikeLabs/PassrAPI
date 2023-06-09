@@ -1,10 +1,15 @@
 import express from 'express';
 import Ajv from 'ajv';
-import Course from '../models/course';
-import schema from '../types/schema.json';
+import schema from '../schema.json';
 
 const courseRouter = express.Router();
 const ajv = new Ajv({ removeAdditional: true });
+
+const schemas = schema.components.schemas;
+const checkPost = ajv.compile(schemas.CourseCreate);
+const checkPut = ajv.compile(schemas.CourseUpdate);
+
+const ERROR_RESPONSE = 'Course not found.';
 
 courseRouter.get('/:id', async (req, res) => {
 	try {
@@ -18,7 +23,7 @@ courseRouter.get('/:id', async (req, res) => {
 			throw 'ERROR - id undefined';
 		}
 	} catch (err) {
-		res.status(404).send('Not found.');
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -27,19 +32,16 @@ courseRouter.post('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
-			const checkPost = ajv.compile(
-				schema.components.schemas.CourseCreate
-			);
 
 			if (checkPost(body)) throw Error('body invalid');
 
-			const course = new Course({ ownerId: userID, ...body });
-
-			console.log(course); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(201); // + .json(created)
+		} else {
+			throw Error('invalid user id');
 		}
 	} catch (err) {
-		res.status(404).send('Not found.');
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -49,19 +51,16 @@ courseRouter.put('/:id', async (req, res) => {
 		const userID = req.header('userID');
 		if (id && userID) {
 			const body = req.body;
-			const checkPut = ajv.compile(
-				schema.components.schemas.CourseUpdate
-			);
 
 			if (checkPut(body)) throw Error('body invalid');
 
-			const course = new Course(body);
-
-			console.log(course); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(200); // + .json(updated)
+		} else {
+			throw Error(`invalid ${id ? 'user' : 'course'} id`);
 		}
 	} catch (err) {
-		res.status(404).send('Not found.');
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 
@@ -74,7 +73,7 @@ courseRouter.delete('/:id', async (req, res) => {
 			res.status(200);
 		}
 	} catch (err) {
-		res.status(404).send('Not found.');
+		res.status(404).send(ERROR_RESPONSE);
 	}
 });
 

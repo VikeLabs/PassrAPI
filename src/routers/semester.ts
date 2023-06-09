@@ -1,10 +1,13 @@
 import express from 'express';
 import Ajv from 'ajv';
-import Semester from '../models/semester';
-import schema from '../types/schema.json';
+import schema from '../schema.json';
 
 const semesterRouter = express.Router();
 const ajv = new Ajv({ removeAdditional: true });
+
+const schemas = schema.components.schemas;
+const checkPost = ajv.compile(schemas.SemesterCreate);
+const checkPut = ajv.compile(schemas.SemesterUpdate);
 
 const ERROR_RESPONSE = 'Semester not found.';
 
@@ -33,16 +36,13 @@ semesterRouter.post('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
-			const checkPost = ajv.compile(
-				schema.components.schemas.SemesterCreate
-			);
 
 			if (checkPost(body)) throw Error('body invalid');
 
-			const semester = new Semester({ owner: userID, ...body });
-
-			console.log(semester); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(201); // + .json(created);
+		} else {
+			throw Error('invalid user id');
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
@@ -55,16 +55,13 @@ semesterRouter.put('/:id', async (req, res) => {
 		const userID = req.header('userID');
 		if (id && userID) {
 			const body = req.body;
-			const checkPut = ajv.compile(
-				schema.components.schemas.SemesterUpdate
-			);
 
 			if (checkPut(body)) throw Error('body invalid');
 
-			const semester = new Semester(body);
-
-			console.log(semester); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(200); // + .json(updated)
+		} else {
+			throw Error(`invalid ${id ? 'user' : 'semester'} id`);
 		}
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);

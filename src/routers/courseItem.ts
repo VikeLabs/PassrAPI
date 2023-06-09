@@ -1,10 +1,13 @@
 import express from 'express';
 import Ajv from 'ajv';
-import CourseItem from '../models/courseItem';
-import schema from '../types/schema.json';
+import schema from '../schema.json';
 
 const cItemRouter = express.Router();
 const ajv = new Ajv({ removeAdditional: true });
+
+const schemas = schema.components.schemas;
+const checkPost = ajv.compile(schemas.CourseItemCreate);
+const checkPut = ajv.compile(schemas.CourseItemUpdate);
 
 const ERROR_RESPONSE = 'Course item not found.';
 
@@ -44,15 +47,10 @@ cItemRouter.post('/', async (req, res) => {
 		const userID = req.header('userID');
 		if (userID) {
 			const body = req.body;
-			const checkPost = ajv.compile(
-				schema.components.schemas.CourseItemCreate
-			);
 
 			if (checkPost(body)) throw Error('body invalid');
 
-			const courseItem = new CourseItem({ ownerId: userID, ...body });
-
-			console.log(courseItem); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(201); // + .json(created)
 		}
 	} catch (err) {
@@ -66,15 +64,10 @@ cItemRouter.put('/:id', async (req, res) => {
 		const userID = req.header('userID');
 		if (id && userID) {
 			const body = req.body;
-			const checkPut = ajv.compile(
-				schema.components.schemas.CourseItemUpdate
-			);
 
 			if (checkPut(body)) throw Error('body invalid');
 
-			const courseItem = new CourseItem(body);
-
-			console.log(courseItem); // TODO: call db operation
+			console.log(body); // TODO: call db operation
 			res.status(200); // + .json(updated)
 		}
 	} catch (err) {
