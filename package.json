@@ -22,6 +22,7 @@
 	},
 	"homepage": "https://github.com/Vikelabs/PassrAPI#readme",
 	"dependencies": {
+		"@prisma/client": "^4.13.0",
 		"@rollup/plugin-commonjs": "^17.1.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.1.1",
@@ -29,14 +30,17 @@
 		"@types/uuid": "^8.3.0",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
 		"@typescript-eslint/parser": "^4.14.1",
+		"ajv": "^8.12.0",
 		"dotenv": "^8.2.0",
 		"dynamoose": "^2.7.3",
 		"eslint": "^7.19.0",
 		"eslint-config-prettier": "^7.2.0",
 		"eslint-plugin-prettier": "^3.3.1",
 		"express": "^4.17.1",
+		"json-loader": "^0.5.7",
 		"nodemon": "^2.0.7",
 		"prettier": "^2.2.1",
+		"prisma-json-schema-generator": "^3.1.4",
 		"rollup": "^2.38.2",
 		"ts-node": "^9.1.1",
 		"uuid": "^8.3.2"
@@ -45,6 +49,7 @@
 		"@types/express": "^4.17.9",
 		"@types/node": "^14.14.22",
 		"@types/uuid": "^8.3.1",
+		"prisma": "^4.13.0",
 		"typescript": "^4.1.3"
 	}
 }
