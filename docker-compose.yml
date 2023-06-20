@@ -1,26 +1,17 @@
+version: '3'
+
 services:
-    dynamodb-local:
-        command: '-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data'
-        image: 'amazon/dynamodb-local:latest'
-        container_name: dynamodb-local
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: myuser
+            POSTGRES_PASSWORD: mypassword
+            POSTGRES_DB: mydb
         ports:
-            - '8000:8000'
+            - '5432:5432'
         volumes:
-            - './docker/dynamodb:/home/dynamodblocal/data'
-        working_dir: /home/dynamodblocal
-    # api:
-    #     build: .
-    #     image: passrapi:dev-latest
-    #     ports:
-    #         - '5000:5000'
-    #     environment:
-    #         AWS_ACCESS_KEY_ID: 'TEST'
-    #         AWS_SECRET_ACCESS_KEY: 'FAKE'
-    #         AWS_REGION: 'us-west-2'
-    #     volumes:
-    #         - apilog:/api/logs
-    #     depends_on:
-    #         - dynamodb-local
+            - dbdata:/var/lib/postgresql/data
 
 volumes:
-    apilog:
+    dbdata:

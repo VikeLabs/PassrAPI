@@ -1,7 +1,8 @@
 module.exports = {
-	useTabs: true,
-	tabWidth: 4,
+	useTabs: false,
+	tabWidth: 2,
 	semi: true,
 	singleQuote: true,
 	proseWrap: 'never',
+	endOfLine: 'auto',
 };
