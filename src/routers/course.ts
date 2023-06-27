@@ -16,12 +16,10 @@ courseRouter.get('/:id', async (req, res) => {
 		const id = req.params.id;
 		const userID = req.header('userID');
 
-		if (id && userID) {
-			// TODO: call db operation
-			res.status(200); // + .json(course)
-		} else {
-			throw 'ERROR - id undefined';
-		}
+		if (!id || !userID) throw Error(`invalid ${id ? 'user' : 'course'} id`);
+
+		// TODO: call db operation
+		res.status(200); // + .json(course)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -30,16 +28,13 @@ courseRouter.get('/:id', async (req, res) => {
 courseRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		if (userID) {
-			const body = req.body;
+		if (!userID) throw Error(`invalid user id`);
 
-			if (checkPost(body)) throw Error('body invalid');
+		const body = req.body;
+		if (checkPost(body)) throw Error('body invalid');
 
-			console.log(body); // TODO: call db operation
-			res.status(201); // + .json(created)
-		} else {
-			throw Error('invalid user id');
-		}
+		// TODO: call db operation
+		res.status(201); // + .json(created)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -49,16 +44,13 @@ courseRouter.put('/:id', async (req, res) => {
 	try {
 		const id = req.params.id;
 		const userID = req.header('userID');
-		if (id && userID) {
-			const body = req.body;
+		if (!id || !userID) throw Error(`invalid ${id ? 'user' : 'course'} id`);
 
-			if (checkPut(body)) throw Error('body invalid');
+		const body = req.body;
+		if (checkPut(body)) throw Error('body invalid');
 
-			console.log(body); // TODO: call db operation
-			res.status(200); // + .json(updated)
-		} else {
-			throw Error(`invalid ${id ? 'user' : 'course'} id`);
-		}
+		console.log(body); // TODO: call db operation
+		res.status(200); // + .json(updated)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -68,10 +60,10 @@ courseRouter.delete('/:id', async (req, res) => {
 	try {
 		const id = req.params.id;
 		const userID = req.header('userID');
-		if (id && userID) {
-			// TODO: call db operation
-			res.status(200);
-		}
+		if (!id || !userID) throw Error(`invalid ${id ? 'user' : 'course'} id`);
+
+		// TODO: call db operation
+		res.status(200);
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}

@@ -6,9 +6,7 @@ const userError = 'User not found.';
 userRouter.get('/:id', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		if (!userID) {
-			throw new Error('ERROR: No user ID found.');
-		}
+		if (!userID) throw Error(`invalid user id`);
 
 		/* leaving this here as a reminder to add semesters array if necessary */
 		// res.send({ ...user, semesters: Array.from(user?.semesters || []) });
@@ -34,9 +32,7 @@ userRouter.post('/', async (req, res) => {
 userRouter.delete('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		if (!userID) {
-			throw 'ERROR: No user ID found.';
-		}
+		if (!userID) throw Error(`invalid user id`);
 
 		// TODO: call db operation
 		res.status(200);

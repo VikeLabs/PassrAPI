@@ -15,12 +15,11 @@ cItemRouter.get('/:id', async (req, res) => {
 	try {
 		const id = req.params.id;
 		const userID = req.header('userID');
-		if (id && userID) {
-			// TODO: call db operation
-			res.status(200); // + .json(courseItem)
-		} else {
-			throw Error('id not found');
-		}
+		if (!id || !userID)
+			throw Error(`invalid ${id ? 'user' : 'course item'} id`);
+
+		// TODO: call db operation
+		res.status(200); // + .json(courseItem)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -45,14 +44,13 @@ const numberify = (str: string) => {
 cItemRouter.post('/', async (req, res) => {
 	try {
 		const userID = req.header('userID');
-		if (userID) {
-			const body = req.body;
+		if (!userID) throw Error(`invalid user id`);
 
-			if (checkPost(body)) throw Error('body invalid');
+		const body = req.body;
+		if (checkPost(body)) throw Error('body invalid');
 
-			console.log(body); // TODO: call db operation
-			res.status(201); // + .json(created)
-		}
+		// TODO: call db operation
+		res.status(201); // + .json(created)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -62,14 +60,14 @@ cItemRouter.put('/:id', async (req, res) => {
 	try {
 		const id = req.params.id;
 		const userID = req.header('userID');
-		if (id && userID) {
-			const body = req.body;
+		if (!id || !userID)
+			throw Error(`invalid ${id ? 'user' : 'course item'} id`);
 
-			if (checkPut(body)) throw Error('body invalid');
+		const body = req.body;
+		if (checkPut(body)) throw Error('body invalid');
 
-			console.log(body); // TODO: call db operation
-			res.status(200); // + .json(updated)
-		}
+		// TODO: call db operation
+		res.status(200); // + .json(updated)
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
@@ -79,10 +77,11 @@ cItemRouter.delete('/:id', async (req, res) => {
 	try {
 		const id = req.params.id;
 		const userID = req.header('userID');
-		if (id && userID) {
-			// TODO: call db operation
-			res.status(200);
-		}
+		if (!id || !userID)
+			throw Error(`invalid ${id ? 'user' : 'course item'} id`);
+
+		// TODO: call db operation
+		res.status(200);
 	} catch (err) {
 		res.status(404).send(ERROR_RESPONSE);
 	}
