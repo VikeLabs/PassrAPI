@@ -10,33 +10,28 @@ export const createCourseItem = async (
   return db.courseItem.create({ data: courseItem });
 };
 
-export const getCourseItemById = async (
+export const getCourseItem = async (
   id: number,
   ownerId: string
 ): Promise<CourseItem> => {
   try {
-    const courseItem = await db.courseItem.findFirst({
+    const courseItem = await db.courseItem.findFirstOrThrow({
       where: { id, ownerId },
     });
-    if (!courseItem) {
-      throw new Error('CourseItem not found');
-    }
     return courseItem;
   } catch (e) {
     throw new Error('CourseItem not found');
   }
 };
 
-export const getCourseItemsByOwnerId = async (
-  ownerId: string
+export const getCourseItems = async (
+  ownerId: string,
+  courseId?: number
 ): Promise<CourseItem[]> => {
   try {
     const courseItems = await db.courseItem.findMany({
-      where: { ownerId },
+      where: { ownerId, courseId },
     });
-    if (!courseItems) {
-      throw new Error('CourseItems not found');
-    }
     return courseItems;
   } catch (e) {
     throw new Error('CourseItems not found');
@@ -49,16 +44,19 @@ export const updateCourseItem = async (
   data: CourseItemUpdate
 ): Promise<CourseItem> => {
   try {
-    const courseItem = await getCourseItemById(id, ownerId);
+    const courseItem = await getCourseItem(id, ownerId);
     return db.courseItem.update({ where: { id: courseItem.id }, data });
   } catch (e) {
     throw new Error('CourseItem not found');
   }
 };
 
-export const deleteCourseItem = async (id: number, ownerId: string): Promise<CourseItem> => {
+export const deleteCourseItem = async (
+  id: number,
+  ownerId: string
+): Promise<CourseItem> => {
   try {
-    const courseItem = await getCourseItemById(id, ownerId);
+    const courseItem = await getCourseItem(id, ownerId);
     return db.courseItem.delete({ where: { id: courseItem.id } });
   } catch (e) {
     throw new Error('CourseItem not found');
